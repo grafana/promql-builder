@@ -117,3 +117,38 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e #v4.0.5
+
+  release_python:
+    needs: codegen
+
+    name: Release Python package
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      id-token: write  # mandatory for trusted publishing
+
+    environment:
+      name: pypi
+      url: https://pypi.org/p/promql_builder
+
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 #v4.2.2
+        with:
+          ref: main # to ensure that we use the latest and greatest
+
+      - name: Install devbox
+        uses: jetify-com/devbox-install-action@a03caf5813591bc882139eba6ae947930a83a427 #v0.11.0
+        with:
+          enable-cache: 'true'
+          devbox-version: ${{ env.DEVBOX_VERSION }}
+
+      - name: Build a binary wheel and a source tarball
+        run: devbox run ./scripts/build-python-wheel.sh
+
+      - name: Publish distribution 📦 to PyPI
+        if: ${{ ! inputs.dryRun }}
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: python/dist/
+          attestations: false

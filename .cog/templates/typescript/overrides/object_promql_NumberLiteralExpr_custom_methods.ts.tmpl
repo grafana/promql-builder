@@ -1,0 +1,5 @@
+{{- define "object_promql_NumberLiteralExpr_custom_methods" }}
+const numberLiteralExprToString = (expr: NumberLiteralExpr): string => {
+    return `${JSON.stringify(expr.value)}`;
+};
+{{- end }}

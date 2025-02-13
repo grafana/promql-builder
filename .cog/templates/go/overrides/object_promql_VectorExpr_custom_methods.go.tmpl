@@ -1,0 +1,38 @@
+{{- define "object_promql_VectorExpr_custom_methods" }}
+{{- $strings := importStdPkg "strings" }}
+func (expression VectorExpr) String() string {
+    var buffer {{ $strings }}.Builder
+
+    buffer.WriteString(expression.Metric)
+
+    if len(expression.Labels) != 0 {
+        buffer.WriteString("{")
+        for i, label := range expression.Labels {
+            buffer.WriteString(label.String())
+
+            if i != len(expression.Labels)-1 {
+                buffer.WriteString(",")
+            }
+        }
+        buffer.WriteString("}")
+    }
+
+    if expression.Range != "" {
+        buffer.WriteString("[")
+        buffer.WriteString(expression.Range)
+        buffer.WriteString("]")
+    }
+
+    if expression.Offset != "" {
+        buffer.WriteString(" offset ")
+        buffer.WriteString(expression.Offset)
+    }
+
+    if expression.At != "" {
+        buffer.WriteString(" @ ")
+        buffer.WriteString(expression.At)
+    }
+
+    return buffer.String()
+}
+{{- end }}

@@ -1,0 +1,6 @@
+{{- define "object_promql_NumberLiteralExpr_custom_methods" }}
+{{- $fmt := importStdPkg "fmt" }}
+func (expr NumberLiteralExpr) String() string {
+    return fmt.Sprintf("%v", expr.Value)
+}
+{{- end }}

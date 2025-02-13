@@ -1,0 +1,309 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/grafana/cog/main/schemas/veneers.json
+
+language: all
+
+package: promql
+
+builders:
+  # sum
+  - add_factory:
+      by_name: AggregationExpr
+      factory:
+        name: sum
+        comments:
+          - "Calculate sum over dimensions."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/operators/#aggregation-operators"
+        arguments:
+          - &vector_argument
+            name: vector
+            type:
+              kind: ref
+              ref: {referred_pkg: promql, referred_type: Expr}
+        options:
+          - name: op
+            parameters:
+              - constant:
+                  value: "sum"
+                  type: &type_ref_agg_op
+                    kind: ref
+                    ref: {referred_pkg: promql, referred_type: AggregationOp}
+          - name: expr
+            parameters:
+              - { argument: *vector_argument }
+
+  # min
+  - add_factory:
+      by_name: AggregationExpr
+      factory:
+        name: min
+        comments:
+          - "Calculate minimum over dimensions."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/operators/#aggregation-operators"
+        arguments:
+          - *vector_argument
+        options:
+          - name: op
+            parameters:
+              - {constant: {value: "min", type: *type_ref_agg_op}}
+          - name: expr
+            parameters:
+              - { argument: *vector_argument }
+
+  # max
+  - add_factory:
+      by_name: AggregationExpr
+      factory:
+        name: max
+        comments:
+          - "Calculate maximum over dimensions."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/operators/#aggregation-operators"
+        arguments:
+          - *vector_argument
+        options:
+          - name: op
+            parameters:
+              - {constant: {value: "max", type: *type_ref_agg_op}}
+          - name: expr
+            parameters:
+              - { argument: *vector_argument }
+
+  # avg
+  - add_factory:
+      by_name: AggregationExpr
+      factory:
+        name: avg
+        comments:
+          - "Calculate the average over dimensions."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/operators/#aggregation-operators"
+        arguments:
+          - *vector_argument
+        options:
+          - name: op
+            parameters:
+              - {constant: {value: "avg", type: *type_ref_agg_op}}
+          - name: expr
+            parameters:
+              - { argument: *vector_argument }
+
+  # group
+  - add_factory:
+      by_name: AggregationExpr
+      factory:
+        name: group
+        comments:
+          - "All values in the resulting vector are 1."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/operators/#aggregation-operators"
+        arguments:
+          - *vector_argument
+        options:
+          - name: op
+            parameters:
+              - {constant: {value: "group", type: *type_ref_agg_op}}
+          - name: expr
+            parameters:
+              - { argument: *vector_argument }
+
+  # stddev
+  - add_factory:
+      by_name: AggregationExpr
+      factory:
+        name: stddev
+        comments:
+          - "Calculate population standard deviation over dimensions."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/operators/#aggregation-operators"
+        arguments:
+          - *vector_argument
+        options:
+          - name: op
+            parameters:
+              - {constant: {value: "stddev", type: *type_ref_agg_op}}
+          - name: expr
+            parameters:
+              - { argument: *vector_argument }
+
+  # stdvar
+  - add_factory:
+      by_name: AggregationExpr
+      factory:
+        name: stdvar
+        comments:
+          - "Calculate population standard variance over dimensions."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/operators/#aggregation-operators"
+        arguments:
+          - *vector_argument
+        options:
+          - name: op
+            parameters:
+              - {constant: {value: "stdvar", type: *type_ref_agg_op}}
+          - name: expr
+            parameters:
+              - { argument: *vector_argument }
+
+  # count
+  - add_factory:
+      by_name: AggregationExpr
+      factory:
+        name: count
+        comments:
+          - "Count number of elements in the vector."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/operators/#aggregation-operators"
+        arguments:
+          - *vector_argument
+        options:
+          - name: op
+            parameters:
+              - {constant: {value: "count", type: *type_ref_agg_op}}
+          - name: expr
+            parameters:
+              - { argument: *vector_argument }
+
+  # quantile
+  - add_factory:
+      by_name: AggregationExpr
+      factory:
+        name: quantile
+        comments:
+          - "Calculate φ-quantile (0 ≤ φ ≤ 1) over dimensions."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/operators/#aggregation-operators"
+        arguments:
+          - *vector_argument
+        options:
+          - name: op
+            parameters:
+              - {constant: {value: "quantile", type: *type_ref_agg_op}}
+          - name: expr
+            parameters:
+              - { argument: *vector_argument }
+
+  # count_values
+  - add_factory:
+      by_name: AggregationExpr
+      factory:
+        name: count_values
+        comments:
+          - "Count number of elements with the same value."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/operators/#aggregation-operators"
+        arguments:
+          - &label_arg
+            name: label
+            type:
+              kind: scalar
+              scalar: {scalar_kind: string}
+          - *vector_argument
+        options:
+          - name: op
+            parameters:
+              - {constant: {value: "count_values", type: *type_ref_agg_op}}
+          - name: expr
+            parameters:
+              - { argument: *vector_argument }
+          - name: param
+            parameters:
+              - factory:
+                  ref: { package: promql, builder: StringLiteralExpr, factory: s }
+                  parameters:
+                    - { argument: *label_arg }
+
+  # bottomk
+  - add_factory:
+      by_name: AggregationExpr
+      factory:
+        name: bottomk
+        comments:
+          - "Smallest k elements by sample value."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/operators/#aggregation-operators"
+        arguments:
+          - &k_arg
+            name: k
+            type:
+              kind: scalar
+              scalar: {scalar_kind: float64}
+          - *vector_argument
+        options:
+          - name: op
+            parameters:
+              - { constant: { value: "bottomk", type: *type_ref_agg_op } }
+          - name: expr
+            parameters:
+              - { argument: *vector_argument }
+          - name: param
+            parameters:
+              - factory:
+                  ref: { package: promql, builder: NumberLiteralExpr, factory: n }
+                  parameters:
+                    - { argument: *k_arg }
+
+  # topk
+  - add_factory:
+      by_name: AggregationExpr
+      factory:
+        name: topk
+        comments:
+          - "Largest k elements by sample value."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/operators/#aggregation-operators"
+        arguments:
+          - *k_arg
+          - *vector_argument
+        options:
+          - name: op
+            parameters:
+              - { constant: { value: "topk", type: *type_ref_agg_op } }
+          - name: expr
+            parameters:
+              - { argument: *vector_argument }
+          - name: param
+            parameters:
+              - factory:
+                  ref: { package: promql, builder: NumberLiteralExpr, factory: n }
+                  parameters:
+                    - { argument: *k_arg }
+
+  # limitk
+  - add_factory:
+      by_name: AggregationExpr
+      factory:
+        name: limitk
+        comments:
+          - "Sample k elements."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/operators/#aggregation-operators"
+        arguments:
+          - *k_arg
+          - *vector_argument
+        options:
+          - name: op
+            parameters:
+              - { constant: { value: "limitk", type: *type_ref_agg_op } }
+          - name: expr
+            parameters:
+              - { argument: *vector_argument }
+          - name: param
+            parameters:
+              - factory:
+                  ref: { package: promql, builder: NumberLiteralExpr, factory: n }
+                  parameters:
+                    - { argument: *k_arg }
+
+  # limit_ratio
+  - add_factory:
+      by_name: AggregationExpr
+      factory:
+        name: limit_ratio
+        comments:
+          - "Sample elements with approximately r ratio if r > 0, and the complement of such samples if r = -(1.0 - r)."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/operators/#aggregation-operators"
+        arguments:
+          - *k_arg
+          - *vector_argument
+        options:
+          - name: op
+            parameters:
+              - { constant: { value: "limit_ratio", type: *type_ref_agg_op } }
+          - name: expr
+            parameters:
+              - { argument: *vector_argument }
+          - name: param
+            parameters:
+              - factory:
+                  ref: { package: promql, builder: NumberLiteralExpr, factory: n }
+                  parameters:
+                    - { argument: *k_arg }

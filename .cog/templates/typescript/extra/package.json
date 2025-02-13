@@ -1,0 +1,47 @@
+{
+  "name": "@grafana/promql-builder",
+  "version": "{{ .Extra.PackageVersion }}",
+  "description": "Library to compose PromQL queries in Typescript.",
+  "keywords": [
+    "observability",
+    "builder",
+    "prometheus",
+    "promql"
+  ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public",
+    "provenance": true
+  },
+  "license": "Apache-2.0",
+  "author": "Grafana Labs",
+  "homepage": "https://github.com/grafana/promql-builder",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/grafana/promql-builder.git",
+    "directory": "typescript"
+  },
+  "sideEffects": false,
+  "types": "dist/index.d.ts",
+  "main": "dist/index.js",
+  "files": [
+    "dist/**/*",
+    "package.json"
+  ],
+  "scripts": {
+    "build": "tsc -p ./tsconfig.json"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.9",
+    "@babel/plugin-transform-classes": "7.10.4",
+    "@babel/plugin-transform-runtime": "^7.12.10",
+    "@babel/preset-env": "^7.12.7",
+    "@babel/preset-typescript": "^7.12.7",
+    "@grafana/tsconfig": "^1.3.0-rc1",
+    "babel-loader": "^8.2.2",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "tslib": "^2.6.2"
+  }
+}

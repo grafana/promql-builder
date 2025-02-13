@@ -1,0 +1,34 @@
+{{- define "object_promql_AggregationExpr_custom_methods" }}
+{{- $fmt := importStdPkg "fmt" }}
+{{- $strings := importStdPkg "strings" }}
+func (agg AggregationExpr) String() string {
+    var buffer {{ $strings }}.Builder
+
+    buffer.WriteString(string(agg.Op))
+
+    if len(agg.Without) != 0 {
+        buffer.WriteString(" without")
+        buffer.WriteString(" (")
+        buffer.WriteString(strings.Join(agg.Without, ", "))
+        buffer.WriteString(") ")
+    }
+
+    if len(agg.By) != 0 {
+        buffer.WriteString(" by")
+        buffer.WriteString(" (")
+        buffer.WriteString(strings.Join(agg.By, ", "))
+        buffer.WriteString(") ")
+    }
+
+    buffer.WriteString("(")
+    if agg.Param != nil {
+        buffer.WriteString(agg.Param.String())
+        buffer.WriteString(", ")
+    }
+
+    buffer.WriteString(agg.Expr.String())
+    buffer.WriteString(")")
+
+    return buffer.String()
+}
+{{- end }}

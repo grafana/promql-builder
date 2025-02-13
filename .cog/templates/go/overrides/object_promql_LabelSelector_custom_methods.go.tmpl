@@ -1,0 +1,6 @@
+{{- define "object_promql_LabelSelector_custom_methods" }}
+{{- $fmt := importStdPkg "fmt" }}
+func (label LabelSelector) String() string {
+    return fmt.Sprintf("%s%s\"%s\"", label.Name, label.Operator, label.Value)
+}
+{{- end }}

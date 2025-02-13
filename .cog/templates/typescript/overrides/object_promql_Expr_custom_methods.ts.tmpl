@@ -1,0 +1,24 @@
+{{- define "object_promql_Expr_custom_methods" }}
+export const toString = (expr: Expr): string => {
+	switch (expr.type) {
+		case "aggregationExpr":
+			return aggregationExprToString(expr);
+		case "binaryExpr":
+			return binaryExprToString(expr);
+		case "funcCallExpr":
+			return funcCallExprToString(expr);
+		case "numberLiteralExpr":
+			return numberLiteralExprToString(expr);
+		case "stringLiteralExpr":
+			return stringLiteralExprToString(expr);
+		case "subqueryExpr":
+			return subqueryExprToString(expr);
+		case "unaryExpr":
+			return unaryExprToString(expr);
+		case "vectorExpr":
+			return vectorExprToString(expr);
+		default:
+			return 'unknown expression type';
+	}
+};
+{{- end }}

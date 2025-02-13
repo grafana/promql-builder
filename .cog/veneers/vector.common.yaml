@@ -1,0 +1,114 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/grafana/cog/main/schemas/veneers.json
+
+language: all
+
+package: promql
+
+builders:
+  - add_factory:
+      by_name: VectorExpr
+      factory:
+        name: Vector
+        comments:
+          - "Returns the scalar s as a vector with no labels."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#vector"
+        arguments:
+          - &scalar_argument
+            name: s
+            type:
+              kind: scalar
+              scalar: {scalar_kind: string}
+        options:
+          - name: metric
+            parameters:
+              - { argument: *scalar_argument }
+
+  # label
+  - add_option:
+      by_object: VectorExpr
+      option:
+        name: label
+        arguments:
+          - &label_argument
+            name: name
+            type: &type_string
+              kind: scalar
+              scalar: {scalar_kind: string}
+          - &value_argument
+            name: value
+            type: *type_string
+        assignments:
+          - method: append
+            path: labels
+            value:
+              envelope:
+                values:
+                  - field: name
+                    value: {argument: *label_argument}
+                  - field: operator
+                    value: {constant: '='}
+                  - field: value
+                    value: {argument: *value_argument}
+
+  # labelNeq
+  - add_option:
+      by_object: VectorExpr
+      option:
+        name: labelNeq
+        arguments:
+          - *label_argument
+          - *value_argument
+        assignments:
+          - method: append
+            path: labels
+            value:
+              envelope:
+                values:
+                  - field: name
+                    value: {argument: *label_argument}
+                  - field: operator
+                    value: {constant: '!='}
+                  - field: value
+                    value: {argument: *value_argument}
+
+  # labelMatchRegexp
+  - add_option:
+      by_object: VectorExpr
+      option:
+        name: labelMatchRegexp
+        arguments:
+          - *label_argument
+          - *value_argument
+        assignments:
+          - method: append
+            path: labels
+            value:
+              envelope:
+                values:
+                  - field: name
+                    value: {argument: *label_argument}
+                  - field: operator
+                    value: {constant: '=~'}
+                  - field: value
+                    value: {argument: *value_argument}
+
+  # labelNotMatchRegexp
+  - add_option:
+      by_object: VectorExpr
+      option:
+        name: labelNotMatchRegexp
+        arguments:
+          - *label_argument
+          - *value_argument
+        assignments:
+          - method: append
+            path: labels
+            value:
+              envelope:
+                values:
+                  - field: name
+                    value: {argument: *label_argument}
+                  - field: operator
+                    value: {constant: '!~'}
+                  - field: value
+                    value: {argument: *value_argument}

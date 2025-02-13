@@ -1,0 +1,32 @@
+{{- define "object_promql_SubqueryExpr_custom_methods" }}
+{{- $strings := importStdPkg "strings" }}
+func (expression SubqueryExpr) String() string {
+    var buffer {{ $strings }}.Builder
+
+    buffer.WriteString("(")
+    buffer.WriteString(expression.Expr.String())
+    buffer.WriteString(")")
+
+    if expression.Range != "" {
+        buffer.WriteString("[")
+        buffer.WriteString(expression.Range)
+        if expression.Resolution != nil {
+            buffer.WriteString(":")
+            buffer.WriteString(*expression.Resolution)
+        }
+        buffer.WriteString("]")
+    }
+
+    if expression.Offset != "" {
+        buffer.WriteString(" offset ")
+        buffer.WriteString(expression.Offset)
+    }
+
+    if expression.At != "" {
+        buffer.WriteString(" @ ")
+        buffer.WriteString(expression.At)
+    }
+
+    return buffer.String()
+}
+{{- end }}

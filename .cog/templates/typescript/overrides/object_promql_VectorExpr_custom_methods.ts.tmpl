@@ -1,0 +1,24 @@
+{{- define "object_promql_VectorExpr_custom_methods" }}
+const vectorExprToString = (expr: VectorExpr): string => {
+    let buffer = expr.metric;
+
+    if (expr.labels.length !== 0) {
+        const labels = expr.labels.map(labelToString);
+        buffer += `{${labels.join(',')}}`;
+    }
+
+    if (expr.range !== '') {
+        buffer += `[${expr.range}]`;
+    }
+
+    if (expr.offset !== '') {
+        buffer += ` offset ${expr.offset}`;
+    }
+
+    if (expr.at !== '') {
+        buffer += ` @ ${expr.at}`;
+    }
+
+    return buffer;
+};
+{{- end }}

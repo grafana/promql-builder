@@ -1,0 +1,14 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/main/.schema/devbox.schema.json",
+  "packages": [
+    "python312@3.12",
+    "go@1.23",
+    "yarn@1.22"
+  ],
+  "shell": {
+    "init_hook": [
+      "echo 'Entering Python venv' && . $VENV_DIR/bin/activate",
+      "echo 'Installing Python dependencies' && pip install -qq -r requirements.txt"
+    ]
+  }
+}

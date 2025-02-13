@@ -1,0 +1,5 @@
+{{- define "object_promql_StringLiteralExpr_custom_methods" }}
+const stringLiteralExprToString = (expr: StringLiteralExpr): string => {
+    return expr.value;
+};
+{{- end }}

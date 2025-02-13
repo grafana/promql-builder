@@ -1,0 +1,28 @@
+{{- define "object_promql_BinaryExpr_custom_methods" }}
+const binaryExprToString = (expr: BinaryExpr): string => {
+    let buffer = '';
+
+    buffer += `(${toString(expr.left)})`;
+    buffer += ` ${expr.op} `;
+
+    if (expr.matchType) {
+        buffer += expr.matchType === 'on' ? 'on' : 'ignoring';
+
+        if (expr.matchLabels && expr.matchLabels.length !== 0) {
+            buffer += `(${expr.matchLabels.join(', ')}) `;
+        }
+    }
+
+    if (expr.groupModifier) {
+        buffer += expr.groupModifier === 'left' ? 'group_left' : 'group_right';
+
+        if (expr.groupLabels && expr.groupLabels.length !== 0) {
+            buffer += `(${expr.groupLabels.join(', ')}) `;
+        }
+    }
+
+    buffer += `(${toString(expr.right)})`;
+
+    return buffer;
+};
+{{- end }}

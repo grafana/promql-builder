@@ -1,0 +1,23 @@
+{{- define "object_promql_BinaryExpr_custom_methods" }}
+def __str__(self):
+    buffer = ""
+
+    buffer += "(" + str(self.left) + ")"
+    buffer += " " + self.op + " "
+
+    if self.match_type is not None:
+        buffer += "on" if self.match_type == "on" else "ignoring"
+
+        if self.match_labels is not None and len(self.match_labels) != 0:
+            buffer += "(" + ", ".join(self.match_labels) + ") "
+
+    if self.group_modifier is not None:
+        buffer += "group_left" if self.group_modifier == "left" else "group_right"
+
+        if self.group_labels is not None and len(self.group_labels) != 0:
+            buffer += "(" + ", ".join(self.group_labels) + ") "
+
+    buffer += "(" + str(self.right) + ")"
+
+    return buffer
+{{- end }}

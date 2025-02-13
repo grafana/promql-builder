@@ -1,0 +1,36 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "promql_builder"
+description = "Library to compose PromQL queries in Python."
+keywords = [
+    "observability",
+    "builder",
+    "prometheus",
+    "promql"
+]
+version = "{{ .Extra.PackageVersion }}"
+dependencies = []
+requires-python = ">=3.11"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: System Administrators",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: System :: Monitoring",
+]
+readme = "../README.md"
+authors = [
+    { name = "Grafana Labs" },
+]
+
+[project.urls]
+Homepage = "https://github.com/grafana/promql-builder"
+Repository = "https://github.com/grafana/promql-builder.git"
+Issues = "https://github.com/grafana/promql-builder/issues"

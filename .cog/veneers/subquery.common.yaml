@@ -1,0 +1,25 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/grafana/cog/main/schemas/veneers.json
+
+language: all
+
+package: promql
+
+builders:
+  - add_factory:
+      by_name: SubqueryExpr
+      factory:
+        name: subquery
+        comments:
+          - "Creates a subquery."
+          - "Subquery allows you to run an instant query for a given range and resolution. The result of a subquery is a range vector."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/basics/#subquery"
+        arguments:
+          - &expression_argument
+            name: expression
+            type:
+              kind: ref
+              ref: {referred_pkg: promql, referred_type: Expr}
+        options:
+          - name: expr
+            parameters:
+              - { argument: *expression_argument }

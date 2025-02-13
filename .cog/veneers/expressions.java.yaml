@@ -1,0 +1,155 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/grafana/cog/main/schemas/veneers.json
+
+language: java
+
+package: promql
+
+builders:
+  # AggregationExpr
+  - rename:
+      by_name: AggregationExpr
+      as: AggregationExprOld
+  - duplicate:
+      by_name: Expr
+      as: AggregationExpr
+  - merge_into:
+      source: AggregationExprOld
+      destination: AggregationExpr
+      under_path: AggregationExpr
+  - omit: { by_name: AggregationExprOld }
+
+  # BinaryExpr
+  - rename:
+      by_name: BinaryExpr
+      as: BinaryExprOld
+  - duplicate:
+      by_name: Expr
+      as: BinaryExpr
+  - merge_into:
+      source: BinaryExprOld
+      destination: BinaryExpr
+      under_path: BinaryExpr
+  - omit: { by_name: BinaryExprOld }
+
+  # FuncCallExpr
+  - rename:
+      by_name: FuncCallExpr
+      as: FuncCallExprOld
+  - duplicate:
+      by_name: Expr
+      as: FuncCallExpr
+  - merge_into:
+      source: FuncCallExprOld
+      destination: FuncCallExpr
+      under_path: FuncCallExpr
+  - omit: { by_name: FuncCallExprOld }
+
+  # NumberLiteralExpr
+  - duplicate:
+      by_name: Expr
+      as: NumberLiteral
+  - merge_into:
+      source: NumberLiteralExpr
+      destination: NumberLiteral
+      under_path: NumberLiteralExpr
+  - omit: { by_name: NumberLiteralExpr }
+
+  # StringLiteralExpr
+  - duplicate:
+      by_name: Expr
+      as: StringLiteral
+  - merge_into:
+      source: StringLiteralExpr
+      destination: StringLiteral
+      under_path: StringLiteralExpr
+  - omit: { by_name: StringLiteralExpr }
+
+  # SubqueryExpr
+  - rename:
+      by_name: SubqueryExpr
+      as: SubqueryExprOld
+  - duplicate:
+      by_name: Expr
+      as: SubqueryExpr
+  - merge_into:
+      source: SubqueryExprOld
+      destination: SubqueryExpr
+      under_path: SubqueryExpr
+  - omit: { by_name: SubqueryExprOld }
+
+  # UnaryExpr
+  - rename:
+      by_name: UnaryExpr
+      as: UnaryExprOld
+  - duplicate:
+      by_name: Expr
+      as: UnaryExpr
+  - merge_into:
+      source: UnaryExprOld
+      destination: UnaryExpr
+      under_path: UnaryExpr
+  - omit: { by_name: UnaryExprOld }
+
+  # VectorExpr
+  - rename:
+      by_name: VectorExpr
+      as: VectorExprOld
+  - duplicate:
+      by_name: Expr
+      as: VectorExpr
+  - merge_into:
+      source: VectorExprOld
+      destination: VectorExpr
+      under_path: VectorExpr
+  - omit: { by_name: VectorExprOld }
+
+  - omit: { by_object: NumberLiteralExprOrStringLiteralExprOrSubqueryExprOrAggregationExprOrVectorExprOrBinaryExprOrUnaryExprOrFuncCallExpr}
+
+options:
+  - omit:
+      by_names:
+        builder: FuncCallExpr
+        options: &unwanted_options
+          - NumberLiteralExpr
+          - StringLiteralExpr
+          - SubqueryExpr
+          - AggregationExpr
+          - VectorExpr
+          - BinaryExpr
+          - UnaryExpr
+          - FuncCallExpr
+
+  - omit:
+      by_names:
+        builder: AggregationExpr
+        options: *unwanted_options
+
+  - omit:
+      by_names:
+        builder: BinaryExpr
+        options: *unwanted_options
+
+  - omit:
+      by_names:
+        builder: NumberLiteral
+        options: *unwanted_options
+
+  - omit:
+      by_names:
+        builder: StringLiteral
+        options: *unwanted_options
+
+  - omit:
+      by_names:
+        builder: SubqueryExpr
+        options: *unwanted_options
+
+  - omit:
+      by_names:
+        builder: UnaryExpr
+        options: *unwanted_options
+
+  - omit:
+      by_names:
+        builder: VectorExpr
+        options: *unwanted_options

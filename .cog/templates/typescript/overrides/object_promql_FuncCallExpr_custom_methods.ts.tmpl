@@ -1,0 +1,10 @@
+{{- define "object_promql_FuncCallExpr_custom_methods" }}
+const funcCallExprToString = (expr: FuncCallExpr): string => {
+    let buffer = `${expr.function}(`;
+    const args = expr.args.map(toString);
+    buffer += `${args.join(', ')}`;
+    buffer += ')';
+
+    return buffer;
+};
+{{- end }}

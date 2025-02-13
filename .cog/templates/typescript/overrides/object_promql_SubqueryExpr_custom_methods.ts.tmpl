@@ -1,0 +1,25 @@
+{{- define "object_promql_SubqueryExpr_custom_methods" }}
+const subqueryExprToString = (expr: SubqueryExpr): string => {
+    let buffer = `(${toString(expr.expr)})`;
+
+    if (expr.range !== '') {
+        buffer += `[${expr.range}`;
+
+        if (expr.resolution) {
+            buffer += `:${expr.resolution}`;
+        }
+
+        buffer += ']';
+    }
+
+    if (expr.offset !== '') {
+        buffer += ` offset ${expr.offset}`;
+    }
+
+    if (expr.at !== '') {
+        buffer += ` @ ${expr.at}`;
+    }
+
+    return buffer;
+};
+{{- end }}

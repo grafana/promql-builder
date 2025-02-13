@@ -1,0 +1,18 @@
+{{- define "object_promql_SubqueryExpr_custom_methods" }}
+def __str__(self):
+    buffer = f'({self.expr!s})'
+
+    if self.range_val != "":
+        buffer += "[" + self.range_val
+
+        if self.resolution is not None:
+            buffer += ":"+self.resolution
+
+    if self.offset != "":
+        buffer += " offset " + self.offset
+
+    if self.at != "":
+        buffer += " @ " + self.at
+
+    return buffer
+{{- end }}

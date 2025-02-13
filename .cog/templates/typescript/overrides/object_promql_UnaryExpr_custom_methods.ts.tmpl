@@ -1,0 +1,5 @@
+{{- define "object_promql_UnaryExpr_custom_methods" }}
+const unaryExprToString = (expr: UnaryExpr): string => {
+    return `${expr.op}${expr.expr.toString()}`;
+};
+{{- end }}

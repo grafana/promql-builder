@@ -1,0 +1,20 @@
+{{- define "object_promql_AggregationExpr_custom_methods" }}
+def __str__(self):
+    buffer = self.op
+
+    if len(self.without) != 0:
+        buffer += ' without(' + ', '.join(self.without) + ') '
+
+    if len(self.by) != 0:
+        buffer += ' by(' + ', '.join(self.by) + ') '
+
+    buffer += '('
+
+    if self.param is not None:
+        buffer += str(self.param) + ', '
+
+    buffer += str(self.expr)
+    buffer += ')'
+
+    return buffer
+{{- end }}

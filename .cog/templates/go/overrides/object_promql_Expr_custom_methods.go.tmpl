@@ -1,0 +1,11 @@
+{{- define "object_promql_Expr_custom_methods" }}
+func (expr Expr) String() string {
+    {{- range $field := (.Object.Type|resolveRefs).Struct.Fields }}
+    if expr.{{ $field.Name|formatFieldName }} != nil {
+        return expr.{{ $field.Name|formatFieldName }}.String()
+    }
+    {{- end }}
+
+    return ""
+}
+{{- end }}

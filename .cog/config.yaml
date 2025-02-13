@@ -1,0 +1,48 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/grafana/cog/main/schemas/pipeline.json
+
+debug: false
+
+parameters:
+  output_dir: './%l'
+  go_package_root: 'github.com/grafana/promql-builder/go'
+  package_version: '0.0.0'
+
+inputs:
+  - cue:
+      entrypoint: '%__config_dir%/schema/promql'
+
+transformations:
+  builders:
+    - '%__config_dir%/veneers'
+
+output:
+  directory: '%output_dir%'
+
+  types: true
+  builders: true
+  api_reference: true
+
+  templates_data:
+    PackageVersion: '%package_version%'
+
+  languages:
+    - go:
+        package_root: '%go_package_root%'
+        extra_files_templates:
+          - '%__config_dir%/templates/go/extra'
+        overrides_templates:
+          - '%__config_dir%/templates/go/overrides'
+
+    - typescript:
+        enums_as_union_types: true
+        extra_files_templates:
+          - '%__config_dir%/templates/typescript/extra'
+        overrides_templates:
+          - '%__config_dir%/templates/typescript/overrides'
+
+    - python:
+        path_prefix: promql_builder
+        extra_files_templates:
+          - '%__config_dir%/templates/python/extra'
+        overrides_templates:
+          - '%__config_dir%/templates/python/overrides'

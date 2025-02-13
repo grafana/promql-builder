@@ -1,0 +1,6 @@
+{{- define "builder_promql_BinaryExpr_custom_methods" }}
+
+    toString(): string {
+        return promql.toString(this.internal);
+    }
+{{- end }}

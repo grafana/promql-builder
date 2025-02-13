@@ -1,0 +1,6 @@
+{{- define "builder_promql_VectorExpr_custom_methods" }}
+
+    toString(): string {
+        return promql.toString(this.internal);
+    }
+{{- end }}

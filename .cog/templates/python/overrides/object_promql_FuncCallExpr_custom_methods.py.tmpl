@@ -1,0 +1,8 @@
+{{- define "object_promql_FuncCallExpr_custom_methods" }}
+def __str__(self):
+    buffer = str(self.function) + "("
+    buffer += ", ".join([str(arg) for arg in self.args])
+    buffer += ")"
+
+    return buffer
+{{- end }}

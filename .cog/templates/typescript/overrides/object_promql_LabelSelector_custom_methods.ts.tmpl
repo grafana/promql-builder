@@ -1,0 +1,5 @@
+{{- define "object_promql_LabelSelector_custom_methods" }}
+export const labelToString = (label: LabelSelector): string => {
+    return `${label.name}${label.operator}${JSON.stringify(label.value)}`;
+};
+{{- end }}

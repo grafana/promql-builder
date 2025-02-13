@@ -1,0 +1,48 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/grafana/cog/main/schemas/veneers.json
+
+language: all
+
+package: promql
+
+builders:
+  # neg
+  - add_factory:
+      by_name: UnaryExpr
+      factory:
+        name: neg
+        comments:
+          - "Negation unary operator."
+        arguments:
+          - &expr_argument
+            name: expr
+            type:
+              kind: ref
+              ref: {referred_pkg: promql, referred_type: Expr}
+        options:
+          - name: op
+            parameters:
+              - constant:
+                  value: "-"
+                  type: &type_ref_unary_op
+                    kind: ref
+                    ref: {referred_pkg: promql, referred_type: UnaryOp}
+          - name: expr
+            parameters:
+              - { argument: *expr_argument }
+
+  # identity
+  - add_factory:
+      by_name: UnaryExpr
+      factory:
+        name: id
+        comments:
+          - "Identity unary operator."
+        arguments:
+          - *expr_argument
+        options:
+          - name: op
+            parameters:
+              - {constant: {value: "+", type: *type_ref_unary_op}}
+          - name: expr
+            parameters:
+              - { argument: *expr_argument }

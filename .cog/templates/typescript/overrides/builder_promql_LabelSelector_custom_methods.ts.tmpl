@@ -1,0 +1,6 @@
+{{- define "builder_promql_LabelSelector_custom_methods" }}
+
+    toString(): string {
+        return promql.labelToString(this.internal);
+    }
+{{- end }}

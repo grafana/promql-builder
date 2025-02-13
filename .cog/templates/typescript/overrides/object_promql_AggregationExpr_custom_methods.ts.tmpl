@@ -1,0 +1,24 @@
+{{- define "object_promql_AggregationExpr_custom_methods" }}
+const aggregationExprToString = (expr: AggregationExpr): string => {
+    let buffer = `${expr.op}`;
+
+    if (expr.by.length !== 0) {
+        buffer += ` by(${expr.by.join(', ')}) `;
+    }
+
+    if (expr.without.length !== 0) {
+        buffer += ` without(${expr.without.join(', ')}) `;
+    }
+
+    buffer += '(';
+
+    if (expr.param) {
+        buffer += `${toString(expr.param)}, `;
+    }
+
+    buffer += toString(expr.expr);
+    buffer += ')';
+
+    return buffer;
+};
+{{- end }}

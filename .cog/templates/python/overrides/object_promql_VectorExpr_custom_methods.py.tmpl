@@ -1,0 +1,18 @@
+{{- define "object_promql_VectorExpr_custom_methods" }}
+def __str__(self):
+    buffer = self.metric
+
+    if len(self.labels) != 0:
+        buffer += "{" + ", ".join([str(label) for label in self.labels]) + "}"
+
+    if self.range_val != "":
+        buffer += "[" + self.range_val + "]"
+
+    if self.offset != "":
+        buffer += " offset " + self.offset
+
+    if self.at != "":
+        buffer += " @ " + self.at
+
+    return buffer
+{{- end }}

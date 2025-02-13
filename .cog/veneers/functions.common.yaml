@@ -1,0 +1,1558 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/grafana/cog/main/schemas/veneers.json
+
+language: all
+
+package: promql
+
+# See https://prometheus.io/docs/prometheus/latest/querying/functions/
+builders:
+  # abs(v instant-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: Abs
+        comments:
+          - "Returns the input vector with all sample values converted to their absolute value."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#abs"
+        arguments:
+          - &v_argument
+            name: v
+            type: &type_expr_ref
+              kind: ref
+              ref: {referred_pkg: promql, referred_type: Expr}
+        options:
+          - name: function
+            parameters:
+              - constant:
+                  value: "abs"
+                  type: &type_string
+                    kind: scalar
+                    scalar: {scalar_kind: string}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+  # absent(v instant-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: Absent
+        comments:
+          - "Returns an empty vector if the vector passed to it has any elements (floats or native histograms) and a 1-element vector with the value 1 if the vector passed to it has no elements."
+          - "This is useful for alerting on when no time series exist for a given metric name and label combination."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#absent"
+        arguments:
+          - *v_argument
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "absent", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+  # absent_over_time(v range-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: absent_over_time
+        comments:
+          - "Returns an empty vector if the range vector passed to it has any elements (floats or native histograms) and a 1-element vector with the value 1 if the range vector passed to it has no elements."
+          - "This is useful for alerting on when no time series exist for a given metric name and label combination for a certain amount of time."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#absent_over_time"
+        arguments:
+          - *v_argument
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "absent_over_time", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+  # ceil(v instant-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: ceil
+        comments:
+          - "Rounds the sample values of all elements in `v` up to the nearest integer value greater than or equal to v."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#ceil"
+        arguments:
+          - *v_argument
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "ceil", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+  # changes(v range-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: changes
+        comments:
+          - "For each input time series, returns the number of times its value has changed within the provided time range as an instant vector."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#changes"
+        arguments:
+          - *v_argument
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "changes", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+  # clamp(v instant-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: clamp
+        comments:
+          - "Clamps the sample values of all elements in `v` to have a lower limit of min and an upper limit of max."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#clamp"
+        arguments:
+          - *v_argument
+          - name: min
+            type: &type_float64
+              kind: scalar
+              scalar: {scalar_kind: float64}
+          - name: max
+            type: *type_float64
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "clamp", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+          - name: arg
+            parameters:
+              - factory:
+                  ref: { package: promql, builder: NumberLiteralExpr, factory: n }
+                  parameters:
+                    - { argument: {name: min, type: *type_float64} }
+          - name: arg
+            parameters:
+              - factory:
+                  ref: { package: promql, builder: NumberLiteralExpr, factory: n }
+                  parameters:
+                    - { argument: {name: max, type: *type_float64} }
+
+  # clamp_max(v instant-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: clamp_max
+        comments:
+          - "Clamps the sample values of all elements in `v` to have an upper limit of `max`."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#clamp_max"
+        arguments:
+          - *v_argument
+          - name: max
+            type: *type_float64
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "clamp_max", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+          - name: arg
+            parameters:
+              - factory:
+                  ref: { package: promql, builder: NumberLiteralExpr, factory: n }
+                  parameters:
+                    - { argument: {name: max, type: *type_float64} }
+
+  # clamp_min(v instant-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: clamp_min
+        comments:
+          - "Clamps the sample values of all elements in `v` to have an lower limit of `min`."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#clamp_min"
+        arguments:
+          - *v_argument
+          - name: min
+            type: *type_float64
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "clamp_min", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+          - name: arg
+            parameters:
+              - factory:
+                  ref: { package: promql, builder: NumberLiteralExpr, factory: n }
+                  parameters:
+                    - { argument: {name: min, type: *type_float64} }
+
+  # day_of_month()
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: day_of_month
+        comments:
+          - "Returns the day of the month in UTC. Returned values are from 1 to 31."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#day_of_month"
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "day_of_month", type: *type_string}}
+
+  # day_of_month_for(v instant-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: day_of_month_for
+        comments:
+          - "Returns the day of the month for each of the given times in UTC. Returned values are from 1 to 31."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#day_of_month"
+        arguments:
+          - *v_argument
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "day_of_month", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+  # day_of_week()
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: day_of_week
+        comments:
+          - "Returns the day of the week in UTC. Returned values are from 0 to 6, where 0 means Sunday etc."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#day_of_week"
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "day_of_week", type: *type_string}}
+
+  # day_of_week_for(v instant-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: day_of_week_for
+        comments:
+          - "Returns the day of the week for each of the given times in UTC. Returned values are from 0 to 6, where 0 means Sunday etc."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#day_of_week"
+        arguments:
+          - *v_argument
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "day_of_week", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+  # day_of_year()
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: day_of_year
+        comments:
+          - "Returns the day of the year in UTC. Returned values are from 1 to 365 for non-leap years, and 1 to 366 in leap years."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#day_of_year"
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "day_of_year", type: *type_string}}
+
+  # day_of_year_for(v instant-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: day_of_year_for
+        comments:
+          - "Returns the day of the year for each of the given times in UTC. Returned values are from 1 to 365 for non-leap years, and 1 to 366 in leap years."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#day_of_year"
+        arguments:
+          - *v_argument
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "day_of_year", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+  # days_in_month()
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: days_in_month
+        comments:
+          - "Returns the number of days in the month. Returned values are from 28 to 31."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#days_in_month"
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "days_in_month", type: *type_string}}
+
+  # days_in_month_for(v instant-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: day_in_month_for
+        comments:
+          - "Returns the number of days in the month for each of the given times in UTC. Returned values are from 28 to 31."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#days_in_month"
+        arguments:
+          - *v_argument
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "days_in_month", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+  # delta(v range-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: delta
+        comments:
+          - "Calculates the difference between the first and last value of each time series element in a range vector, returning an instant vector with the given deltas and equivalent labels."
+          - "The delta is extrapolated to cover the full time range as specified in the range vector selector, so that it is possible to get a non-integer result even if the sample values are all integers."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#delta"
+        arguments:
+          - *v_argument
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "delta", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+  # deriv(v range-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: deriv
+        comments:
+          - "Calculates the per-second derivative of the time series in a range vector using simple linear regression."
+          - "The range vector must have at least two samples in order to perform the calculation. When +Inf or -Inf are found in the range vector, the slope and offset value calculated will be NaN."
+          - "deriv should only be used with gauges."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#deriv"
+        arguments:
+          - *v_argument
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "deriv", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+  # exp(v instant-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: exp
+        comments:
+          - "Calculates the exponential function for all elements in vector"
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#exp"
+        arguments:
+          - *v_argument
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "exp", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+  # floor(v instant-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: floor
+        comments:
+          - "Rounds the sample values of all elements in v down to the nearest integer value smaller than or equal to v."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#floor"
+        arguments:
+          - *v_argument
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "floor", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+  # histogram_avg(v instant-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: histogram_avg
+        comments:
+          - "Returns the arithmetic average of observed values stored in a native histogram. Samples that are not native histograms are ignored and do not show up in the returned vector."
+          - "Note: This function only acts on native histograms."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#histogram_avg"
+        arguments:
+          - *v_argument
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "histogram_avg", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+  # histogram_count(v instant-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: histogram_count
+        comments:
+          - "Returns the count of observations stored in a native histogram. Samples that are not native histograms are ignored and do not show up in the returned vector."
+          - "Note: This function only acts on native histograms."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#histogram_count-and-histogram_sum"
+        arguments:
+          - *v_argument
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "histogram_count", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+  # histogram_sum(v instant-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: histogram_sum
+        comments:
+          - "Returns the sum of observations stored in a native histogram."
+          - "Note: This function only acts on native histograms."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#histogram_count-and-histogram_sum"
+        arguments:
+          - *v_argument
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "histogram_sum", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+  # histogram_fraction(lower scalar, upper scalar, v instant-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: histogram_fraction
+        comments:
+          - "Returns the estimated fraction of observations between the provided lower and upper values. Samples that are not native histograms are ignored and do not show up in the returned vector."
+          - "Note: This function only acts on native histograms."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#histogram_fraction"
+        arguments:
+          - name: lower
+            type: *type_float64
+          - name: upper
+            type: *type_float64
+          - *v_argument
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "histogram_fraction", type: *type_string}}
+          - name: arg
+            parameters:
+              - factory:
+                  ref: { package: promql, builder: NumberLiteralExpr, factory: n }
+                  parameters:
+                    - { argument: {name: lower, type: *type_float64} }
+          - name: arg
+            parameters:
+              - factory:
+                  ref: { package: promql, builder: NumberLiteralExpr, factory: n }
+                  parameters:
+                    - { argument: {name: upper, type: *type_float64} }
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+  # histogram_quantile(φ scalar, b instant-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: histogram_quantile
+        comments:
+          - "Calculates the φ-quantile (0 ≤ φ ≤ 1) from a classic histogram or from a native histogram."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#histogram_quantile"
+        arguments:
+          - &type_phi_arg
+            name: phi
+            type:
+              kind: scalar
+              scalar: {scalar_kind: float64}
+          - *v_argument
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "histogram_quantile", type: *type_string}}
+          - name: arg
+            parameters:
+              - factory:
+                  ref: {package: promql, builder: NumberLiteralExpr, factory: n}
+                  parameters:
+                    - {argument: *type_phi_arg }
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+  # histogram_stddev(v instant-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: histogram_stddev
+        comments:
+          - "Returns the estimated standard deviation of observations in a native histogram, based on the geometric mean of the buckets where the observations lie."
+          - "Samples that are not native histograms are ignored and do not show up in the returned vector."
+          - "Note: This function only acts on native histograms."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#histogram_stddev"
+        arguments:
+          - *v_argument
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "histogram_stddev", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+  # histogram_stdvar(v instant-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: histogram_stdvar
+        comments:
+          - "Returns the estimated standard variance of observations in a native histogram."
+          - "Samples that are not native histograms are ignored and do not show up in the returned vector."
+          - "Note: This function only acts on native histograms."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#histogram_stdvar"
+        arguments:
+          - *v_argument
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "histogram_stdvar", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+  # hour()
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: hour
+        comments:
+          - "Returns the hour of the day for each of the given times in UTC. Returned values are from 0 to 23."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#hour"
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "hour", type: *type_string}}
+
+  # hour_for(v instant-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: hour_for
+        comments:
+          - "Returns the hour of the day for each of the given times in UTC. Returned values are from 0 to 23."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#hour"
+        arguments:
+          - *v_argument
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "hour", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+  # idelta(v range-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: idelta
+        comments:
+          - "Calculates the difference between the last two samples in the range vector v, returning an instant vector with the given deltas and equivalent labels."
+          - "idelta should only be used with gauges."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#idelta"
+        arguments:
+          - *v_argument
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "idelta", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+  # increase(v range-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: increase
+        comments:
+          - "Calculates the increase in the time series in the range vector"
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#increase"
+        arguments:
+          - *v_argument
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "increase", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+  # irate(v range-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: irate
+        comments:
+          - "Calculates the per-second instant rate of increase of the time series in the range vector. This is based on the last two data points."
+          - "irate should only be used when graphing volatile, fast-moving counters. Use rate for alerts and slow-moving counters, as brief changes in the rate can reset the FOR clause and graphs consisting entirely of rare spikes are hard to read."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#irate"
+        arguments:
+          - *v_argument
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "irate", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+  # TODO: label_join
+
+  # label_replace(v instant-vector, dst_label string, replacement string, src_label string, regex string)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: label_replace
+        comments:
+          - "matches the regular expression regex against the value of the label src_label. If it matches, the value of the label dst_label in the returned timeseries will be the expansion of replacement, together with the original labels in the input. Capturing groups in the regular expression can be referenced with $1, $2, etc. Named capturing groups in the regular expression can be referenced with $name (where name is the capturing group name). If the regular expression doesn't match then the timeseries is returned unchanged."
+          - "label_replace acts on float and histogram samples in the same way."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#label_replace"
+        arguments:
+          - *v_argument
+          - name: dst_label
+            type: *type_string
+          - name: replacement
+            type: *type_string
+          - name: src_label
+            type: *type_string
+          - name: regex
+            type: *type_string
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "label_replace", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+          - name: arg
+            parameters:
+              - factory:
+                  ref: { package: promql, builder: StringLiteralExpr, factory: s }
+                  parameters:
+                    - { argument: { name: dst_label, type: *type_string } }
+          - name: arg
+            parameters:
+              - factory:
+                  ref: { package: promql, builder: StringLiteralExpr, factory: s }
+                  parameters:
+                    - { argument: { name: replacement, type: *type_string } }
+          - name: arg
+            parameters:
+              - factory:
+                  ref: { package: promql, builder: StringLiteralExpr, factory: s }
+                  parameters:
+                    - { argument: { name: src_label, type: *type_string } }
+          - name: arg
+            parameters:
+              - factory:
+                  ref: { package: promql, builder: StringLiteralExpr, factory: s }
+                  parameters:
+                    - { argument: { name: regex, type: *type_string } }
+
+  # ln(v instant-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: ln
+        comments:
+          - "Calculates the natural logarithm for all elements in v."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#ln"
+        arguments:
+          - *v_argument
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "ln", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+  # log2(v instant-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: log2
+        comments:
+          - "Calculates the binary logarithm for all elements in v."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#log2"
+        arguments:
+          - *v_argument
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "log2", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+  # log10(v instant-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: log10
+        comments:
+          - "Calculates the decimal logarithm for all elements in v."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#log10"
+        arguments:
+          - *v_argument
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "log10", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+  # minute()
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: minute
+        comments:
+          - "Returns the minute of the hour for each of the given times in UTC. Returned values are from 0 to 59."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#minute"
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "minute", type: *type_string}}
+
+  # minute_for(v instant-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: minute_for
+        comments:
+          - "Returns the minute of the hour for each of the given times in UTC. Returned values are from 0 to 59."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#minute"
+        arguments:
+          - *v_argument
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "minute", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+  # month()
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: month
+        comments:
+          - "Returns the month of the year for each of the given times in UTC. Returned values are from 1 to 12, where 1 means January etc."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#month"
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "month", type: *type_string}}
+
+  # month_for(v instant-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: month_for
+        comments:
+          - "Returns the month of the year for each of the given times in UTC. Returned values are from 1 to 12, where 1 means January etc."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#month"
+        arguments:
+          - *v_argument
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "month", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+  # predict_linear(v range-vector, t scalar)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: predict_linear
+        comments:
+          - "Predicts the value of time series t seconds from now, based on the range vector v, using simple linear regression. The range vector must have at least two samples in order to perform the calculation."
+          - "predict_linear should only be used with gauges."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#predict_linear"
+        arguments:
+          - *v_argument
+          - name: t
+            type: *type_float64
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "predict_linear", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+          - name: arg
+            parameters:
+              - factory:
+                  ref: { package: promql, builder: NumberLiteralExpr, factory: n }
+                  parameters:
+                    - { argument: {name: t, type: *type_float64} }
+
+  # rate(v range-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: rate
+        comments:
+          - "Calculates the per-second average rate of increase of the time series in the range vector."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#rate"
+        arguments:
+          - *v_argument
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "rate", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+  # resets(v range-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: resets
+        comments:
+          - "For each input time series, resets(v range-vector) returns the number of counter resets within the provided time range as an instant vector. Any decrease in the value between two consecutive float samples is interpreted as a counter reset. A reset in a native histogram is detected in a more complex way: Any decrease in any bucket, including the zero bucket, or in the count of observation constitutes a counter reset, but also the disappearance of any previously populated bucket, an increase in bucket resolution, or a decrease of the zero-bucket width."
+          - "`resets` should only be used with counters and counter-like native histograms."
+          - "If the range vector contains a mix of float and histogram samples for the same series, counter resets are detected separately and their numbers added up. The change from a float to a histogram sample is not considered a counter reset. Each float sample is compared to the next float sample, and each histogram is compared to the next histogram."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#resets"
+        arguments:
+          - *v_argument
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "resets", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+  # round(v instant-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: round
+        comments:
+          - "Rounds the sample values of all elements in v to the nearest integer. Ties are resolved by rounding up."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#round"
+        arguments:
+          - *v_argument
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "round", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+  # round_to(v instant-vector, to_nearest scalar)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: round_to
+        comments:
+          - "Rounds the sample values of all elements in v to the nearest integer. Ties are resolved by rounding up."
+          - "The to_nearest argument allows specifying the nearest multiple to which the sample values should be rounded. This multiple may also be a fraction."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#round"
+        arguments:
+          - *v_argument
+          - name: to_nearest
+            type: *type_float64
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "round", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+          - name: arg
+            parameters:
+              - factory:
+                  ref: { package: promql, builder: NumberLiteralExpr, factory: n }
+                  parameters:
+                    - { argument: {name: to_nearest, type: *type_float64} }
+
+  # scalar(v instant-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: scalar
+        comments:
+          - "Given a single-element input vector, scalar() returns the sample value of that single element as a scalar."
+          - "If the input vector does not have exactly one element, scalar will return NaN."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#scalar"
+        arguments:
+          - *v_argument
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "scalar", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+  # sgn(v instant-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: sgn
+        comments:
+          - "Returns a vector with all sample values converted to their sign, defined as this: 1 if v is positive, -1 if v is negative and 0 if v is equal to zero."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#sgn"
+        arguments:
+          - *v_argument
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "sgn", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+  # sort(v instant-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: sort
+        comments:
+          - "Returns vector elements sorted by their sample values, in ascending order. Native histograms are sorted by their sum of observations."
+          - "Note that sort only affects the results of instant queries, as range query results always have a fixed output ordering."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#sort"
+        arguments:
+          - *v_argument
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "sort", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+  # sort_desc(v instant-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: sort_desc
+        comments:
+          - "Same as `sort()`, but sorts in descending order."
+          - "Like sort, sort_desc only affects the results of instant queries, as range query results always have a fixed output ordering."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#sort_desc"
+        arguments:
+          - *v_argument
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "sort_desc", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+  # sqrt(v instant-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: sqrt
+        comments:
+          - "Calculates the square root of all elements in v."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#sqrt"
+        arguments:
+          - *v_argument
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "sqrt", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+  # time()
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: time
+        comments:
+          - "Returns the number of seconds since January 1, 1970 UTC. Note that this does not actually return the current time, but the time at which the expression is to be evaluated."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#time"
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "time", type: *type_string}}
+
+  # timestamp(v instant-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: timestamp
+        comments:
+          - "Returns the timestamp of each of the samples of the given vector as the number of seconds since January 1, 1970 UTC. It also works with histogram samples."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#timestamp"
+        arguments:
+          - *v_argument
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "timestamp", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+  # vector(s scalar)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: vect
+        comments:
+          - "Returns the scalar s as a vector with no labels."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#vector"
+        arguments:
+          - name: s
+            type: *type_float64
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "vector", type: *type_string}}
+          - name: arg
+            parameters:
+              - factory:
+                  ref: { package: promql, builder: NumberLiteralExpr, factory: n }
+                  parameters:
+                    - { argument: {name: s, type: *type_float64} }
+
+  # year()
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: year
+        comments:
+          - "Returns the year for each of the given times in UTC."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#year"
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "year", type: *type_string}}
+
+  # year_for(v instant-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: year_for
+        comments:
+          - "Returns the year for each of the given times in UTC."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#year"
+        arguments:
+          - *v_argument
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "year", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+  # avg_over_time(range-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: avg_over_time
+        comments:
+          - "Calculates average value of all points in the specified interval."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#aggregation_over_time"
+        arguments:
+          - *v_argument
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "avg_over_time", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+  # min_over_time(range-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: min_over_time
+        comments:
+          - "Calculates the minimum value of all points in the specified interval."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#aggregation_over_time"
+        arguments:
+          - *v_argument
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "min_over_time", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+  # max_over_time(range-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: max_over_time
+        comments:
+          - "Calculates the maximum value of all points in the specified interval."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#aggregation_over_time"
+        arguments:
+          - *v_argument
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "max_over_time", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+  # sum_over_time(range-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: sum_over_time
+        comments:
+          - "Calculates the sum of all values in the specified interval."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#aggregation_over_time"
+        arguments:
+          - *v_argument
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "sum_over_time", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+  # count_over_time(range-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: count_over_time
+        comments:
+          - "Calculates the count of all values in the specified interval."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#aggregation_over_time"
+        arguments:
+          - *v_argument
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "count_over_time", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+  # quantile_over_time(scalar, range-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: quantile_over_time
+        comments:
+          - "Calculates the φ-quantile (0 ≤ φ ≤ 1) of the values in the specified interval."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#aggregation_over_time"
+        arguments:
+          - name: phi
+            type: *type_float64
+          - *v_argument
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "quantile_over_time", type: *type_string}}
+          - name: arg
+            parameters:
+              - factory:
+                  ref: { package: promql, builder: NumberLiteralExpr, factory: n }
+                  parameters:
+                    - { argument: {name: phi, type: *type_float64} }
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+  # stddev_over_time(range-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: stddev_over_time
+        comments:
+          - "Calculates the population standard deviation of the values in the specified interval."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#aggregation_over_time"
+        arguments:
+          - *v_argument
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "stddev_over_time", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+  # stdvar_over_time(range-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: stdvar_over_time
+        comments:
+          - "Calculates the population standard variance of the values in the specified interval."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#aggregation_over_time"
+        arguments:
+          - *v_argument
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "stdvar_over_time", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+  # last_over_time(range-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: last_over_time
+        comments:
+          - "Returns the most recent point value in the specified interval."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#aggregation_over_time"
+        arguments:
+          - *v_argument
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "last_over_time", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+  # present_over_time(range-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: present_over_time
+        comments:
+          - "Returns the value 1 for any series in the specified interval."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#aggregation_over_time"
+        arguments:
+          - *v_argument
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "present_over_time", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+  # acos(instant-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: acos
+        comments:
+          - "Calculates the arccosine of all elements in v"
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#trigonometric-functions"
+        arguments:
+          - *v_argument
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "acos", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+  # acosh(instant-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: acosh
+        comments:
+          - "Calculates the inverse hyperbolic cosine of all elements in v"
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#trigonometric-functions"
+        arguments:
+          - *v_argument
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "acosh", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+  # asin(instant-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: asin
+        comments:
+          - "Calculates the arcsine of all elements in v"
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#trigonometric-functions"
+        arguments:
+          - *v_argument
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "asin", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+  # asinh(instant-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: asinh
+        comments:
+          - "Calculates the inverse hyperbolic sine of all elements in v"
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#trigonometric-functions"
+        arguments:
+          - *v_argument
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "asinh", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+  # atan(instant-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: atan
+        comments:
+          - "Calculates the arctangent of all elements in v"
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#trigonometric-functions"
+        arguments:
+          - *v_argument
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "atan", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+  # atanh(instant-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: atanh
+        comments:
+          - "Calculates the inverse hyperbolic tangent of all elements in v"
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#trigonometric-functions"
+        arguments:
+          - *v_argument
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "atanh", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+  # cos(instant-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: cos
+        comments:
+          - "Calculates the cosine of all elements in v"
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#trigonometric-functions"
+        arguments:
+          - *v_argument
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "cos", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+  # cosh(instant-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: cosh
+        comments:
+          - "Calculates the hyperbolic cosine of all elements in v"
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#trigonometric-functions"
+        arguments:
+          - *v_argument
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "cosh", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+  # sin(instant-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: sin
+        comments:
+          - "Calculates the sine of all elements in v"
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#trigonometric-functions"
+        arguments:
+          - *v_argument
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "sin", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+  # sinh(instant-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: sinh
+        comments:
+          - "Calculates the hyperbolic sine of all elements in v"
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#trigonometric-functions"
+        arguments:
+          - *v_argument
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "sinh", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+  # tan(instant-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: tan
+        comments:
+          - "Calculates the tangent of all elements in v"
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#trigonometric-functions"
+        arguments:
+          - *v_argument
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "tan", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+  # tanh(instant-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: tanh
+        comments:
+          - "Calculates the hyperbolic tangent of all elements in v"
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#trigonometric-functions"
+        arguments:
+          - *v_argument
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "tanh", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+  # deg(instant-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: deg
+        comments:
+          - "Converts radians to degrees for all elements in v."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#trigonometric-functions"
+        arguments:
+          - *v_argument
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "deg", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+  # pi()
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: pi
+        comments:
+          - "Returns pi."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#trigonometric-functions"
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "pi", type: *type_string}}
+
+  # rad(instant-vector)
+  - add_factory:
+      by_name: FuncCallExpr
+      factory:
+        name: rad
+        comments:
+          - "Converts degrees to radians for all elements in v."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/functions/#trigonometric-functions"
+        arguments:
+          - *v_argument
+        options:
+          - name: function
+            parameters:
+              - {constant: {value: "rad", type: *type_string}}
+          - name: arg
+            parameters:
+              - {argument: *v_argument}
+
+options:
+  - duplicate:
+      by_builder: FuncCallExpr.args
+      as: arg
+  - array_to_append:
+      by_builder: FuncCallExpr.arg

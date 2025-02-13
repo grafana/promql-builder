@@ -1,0 +1,50 @@
+{{- define "object_promql_BinaryExpr_custom_methods" }}
+{{- $strings := importStdPkg "strings" }}
+func (expr BinaryExpr) String() string {
+    var buffer {{ $strings }}.Builder
+
+    buffer.WriteString("(")
+    buffer.WriteString(expr.Left.String())
+    buffer.WriteString(")")
+
+    buffer.WriteString(" ")
+    buffer.WriteString(string(expr.Op))
+    buffer.WriteString(" ")
+
+    if expr.MatchType != nil {
+        if *expr.MatchType == "on" {
+            buffer.WriteString("on")
+        } else {
+            buffer.WriteString("ignoring")
+        }
+
+        if len(expr.MatchLabels) != 0 {
+            buffer.WriteString("(")
+            buffer.WriteString(strings.Join(expr.MatchLabels, ", "))
+            buffer.WriteString(") ")
+        }
+    }
+
+    if expr.GroupModifier != nil {
+        buffer.WriteString(" ")
+
+        if *expr.GroupModifier == "left" {
+            buffer.WriteString("group_left")
+        } else {
+            buffer.WriteString("group_right")
+        }
+
+        if len(expr.GroupLabels) != 0 {
+            buffer.WriteString("(")
+            buffer.WriteString(strings.Join(expr.GroupLabels, ", "))
+            buffer.WriteString(") ")
+        }
+    }
+
+    buffer.WriteString("(")
+    buffer.WriteString(expr.Right.String())
+    buffer.WriteString(")")
+
+    return buffer.String()
+}
+{{- end }}

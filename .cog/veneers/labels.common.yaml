@@ -1,0 +1,92 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/grafana/cog/main/schemas/veneers.json
+
+language: all
+
+package: promql
+
+builders:
+  # labelEq
+  - add_factory:
+      by_name: Label
+      factory:
+        name: labelEq
+        arguments:
+          - &name_argument
+            name: name
+            type: &type_string
+              kind: scalar
+              scalar: {scalar_kind: string}
+          - &value_argument
+            name: value
+            type: *type_string
+        options:
+          - name: name
+            parameters:
+              - { argument: *name_argument }
+          - name: value
+            parameters:
+              - { argument: *value_argument }
+          - name: operator
+            parameters:
+              - constant:
+                  value: "="
+                  type: &type_ref_label_op
+                    kind: ref
+                    ref: {referred_pkg: promql, referred_type: LabelOperator}
+
+  # labelNeq
+  - add_factory:
+      by_name: Label
+      factory:
+        name: labelNeq
+        arguments:
+          - *name_argument
+          - *value_argument
+        options:
+          - name: name
+            parameters:
+              - { argument: *name_argument }
+          - name: value
+            parameters:
+              - { argument: *value_argument }
+          - name: operator
+            parameters:
+              - {constant: {value: "!=", type: *type_ref_label_op}}
+
+  # labelMatchRegexp
+  - add_factory:
+      by_name: Label
+      factory:
+        name: labelMatchRegexp
+        arguments:
+          - *name_argument
+          - *value_argument
+        options:
+          - name: name
+            parameters:
+              - { argument: *name_argument }
+          - name: value
+            parameters:
+              - { argument: *value_argument }
+          - name: operator
+            parameters:
+              - {constant: {value: "=~", type: *type_ref_label_op}}
+
+  # labelNotMatchRegexp
+  - add_factory:
+      by_name: Label
+      factory:
+        name: labelNotMatchRegexp
+        arguments:
+          - *name_argument
+          - *value_argument
+        options:
+          - name: name
+            parameters:
+              - { argument: *name_argument }
+          - name: value
+            parameters:
+              - { argument: *value_argument }
+          - name: operator
+            parameters:
+              - {constant: {value: "!~", type: *type_ref_label_op}}

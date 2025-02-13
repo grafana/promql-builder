@@ -1,0 +1,5 @@
+{{- define "object_promql_StringLiteralExpr_custom_methods" }}
+func (expr StringLiteralExpr) String() string {
+    return expr.Value
+}
+{{- end }}

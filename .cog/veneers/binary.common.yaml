@@ -1,0 +1,452 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/grafana/cog/main/schemas/veneers.json
+
+language: all
+
+package: promql
+
+builders:
+  # add
+  - add_factory:
+      by_name: BinaryExpr
+      factory:
+        name: add
+        comments:
+          - "Addition binary operator."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/operators/#arithmetic-binary-operators"
+        arguments:
+          - &left_expr_argument
+            name: left
+            type: &type_ref_Expr
+              kind: ref
+              ref: {referred_pkg: promql, referred_type: Expr}
+          - &right_expr_argument
+            name: right
+            type: *type_ref_Expr
+        options:
+          - name: op
+            parameters:
+              - constant:
+                  value: "+"
+                  type: &type_ref_binary_op
+                    kind: ref
+                    ref: {referred_pkg: promql, referred_type: BinaryOp}
+          - name: left
+            parameters:
+              - { argument: *left_expr_argument }
+          - name: right
+            parameters:
+              - { argument: *right_expr_argument }
+  # sub
+  - add_factory:
+      by_name: BinaryExpr
+      factory:
+        name: sub
+        comments:
+          - "Subtraction binary operator."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/operators/#arithmetic-binary-operators"
+        arguments:
+          - *left_expr_argument
+          - *right_expr_argument
+        options:
+          - name: op
+            parameters:
+              - {constant: {value: "-", type: *type_ref_binary_op}}
+          - name: left
+            parameters:
+              - { argument: *left_expr_argument }
+          - name: right
+            parameters:
+              - { argument: *right_expr_argument }
+
+  # mul
+  - add_factory:
+      by_name: BinaryExpr
+      factory:
+        name: mul
+        comments:
+          - "Multiplication binary operator."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/operators/#arithmetic-binary-operators"
+        arguments:
+          - *left_expr_argument
+          - *right_expr_argument
+        options:
+          - name: op
+            parameters:
+              - {constant: {value: "*", type: *type_ref_binary_op}}
+          - name: left
+            parameters:
+              - { argument: *left_expr_argument }
+          - name: right
+            parameters:
+              - { argument: *right_expr_argument }
+
+  # div
+  - add_factory:
+      by_name: BinaryExpr
+      factory:
+        name: div
+        comments:
+          - "Division binary operator."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/operators/#arithmetic-binary-operators"
+        arguments:
+          - *left_expr_argument
+          - *right_expr_argument
+        options:
+          - name: op
+            parameters:
+              - {constant: {value: "/", type: *type_ref_binary_op}}
+          - name: left
+            parameters:
+              - { argument: *left_expr_argument }
+          - name: right
+            parameters:
+              - { argument: *right_expr_argument }
+
+  # mod
+  - add_factory:
+      by_name: BinaryExpr
+      factory:
+        name: mod
+        comments:
+          - "Modulo binary operator."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/operators/#arithmetic-binary-operators"
+        arguments:
+          - *left_expr_argument
+          - *right_expr_argument
+        options:
+          - name: op
+            parameters:
+              - {constant: {value: "%", type: *type_ref_binary_op}}
+          - name: left
+            parameters:
+              - { argument: *left_expr_argument }
+          - name: right
+            parameters:
+              - { argument: *right_expr_argument }
+
+  # pow
+  - add_factory:
+      by_name: BinaryExpr
+      factory:
+        name: pow
+        comments:
+          - "Power/exponentiation binary operator."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/operators/#arithmetic-binary-operators"
+        arguments:
+          - *left_expr_argument
+          - *right_expr_argument
+        options:
+          - name: op
+            parameters:
+              - {constant: {value: "^", type: *type_ref_binary_op}}
+          - name: left
+            parameters:
+              - { argument: *left_expr_argument }
+          - name: right
+            parameters:
+              - { argument: *right_expr_argument }
+
+  # eq
+  - add_factory:
+      by_name: BinaryExpr
+      factory:
+        name: eq
+        comments:
+          - "\"equal\" comparison binary operator."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/operators/#comparison-binary-operators"
+        arguments:
+          - *left_expr_argument
+          - *right_expr_argument
+        options:
+          - name: op
+            parameters:
+              - {constant: {value: "==", type: *type_ref_binary_op}}
+          - name: left
+            parameters:
+              - { argument: *left_expr_argument }
+          - name: right
+            parameters:
+              - { argument: *right_expr_argument }
+
+  # neq
+  - add_factory:
+      by_name: BinaryExpr
+      factory:
+        name: neq
+        comments:
+          - "\"not-equal\" comparison binary operator."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/operators/#comparison-binary-operators"
+        arguments:
+          - *left_expr_argument
+          - *right_expr_argument
+        options:
+          - name: op
+            parameters:
+              - {constant: {value: "!=", type: *type_ref_binary_op}}
+          - name: left
+            parameters:
+              - { argument: *left_expr_argument }
+          - name: right
+            parameters:
+              - { argument: *right_expr_argument }
+
+  # greater than, >
+  - add_factory:
+      by_name: BinaryExpr
+      factory:
+        name: gt
+        comments:
+          - "\"greater-than\" comparison binary operator."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/operators/#comparison-binary-operators"
+        arguments:
+          - *left_expr_argument
+          - *right_expr_argument
+        options:
+          - name: op
+            parameters:
+              - {constant: {value: ">", type: *type_ref_binary_op}}
+          - name: left
+            parameters:
+              - { argument: *left_expr_argument }
+          - name: right
+            parameters:
+              - { argument: *right_expr_argument }
+
+  # less than, >
+  - add_factory:
+      by_name: BinaryExpr
+      factory:
+        name: lt
+        comments:
+          - "\"less-than\" comparison binary operator."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/operators/#comparison-binary-operators"
+        arguments:
+          - *left_expr_argument
+          - *right_expr_argument
+        options:
+          - name: op
+            parameters:
+              - {constant: {value: "<", type: *type_ref_binary_op}}
+          - name: left
+            parameters:
+              - { argument: *left_expr_argument }
+          - name: right
+            parameters:
+              - { argument: *right_expr_argument }
+
+  # greater or equal, >=
+  - add_factory:
+      by_name: BinaryExpr
+      factory:
+        name: gte
+        comments:
+          - "\"greater-or-equal\" comparison binary operator."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/operators/#comparison-binary-operators"
+        arguments:
+          - *left_expr_argument
+          - *right_expr_argument
+        options:
+          - name: op
+            parameters:
+              - {constant: {value: ">=", type: *type_ref_binary_op}}
+          - name: left
+            parameters:
+              - { argument: *left_expr_argument }
+          - name: right
+            parameters:
+              - { argument: *right_expr_argument }
+
+  # less or equal, <=
+  - add_factory:
+      by_name: BinaryExpr
+      factory:
+        name: lte
+        comments:
+          - "\"less-or-equal\" comparison binary operator."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/operators/#comparison-binary-operators"
+        arguments:
+          - *left_expr_argument
+          - *right_expr_argument
+        options:
+          - name: op
+            parameters:
+              - {constant: {value: "<=", type: *type_ref_binary_op}}
+          - name: left
+            parameters:
+              - { argument: *left_expr_argument }
+          - name: right
+            parameters:
+              - { argument: *right_expr_argument }
+
+  # and
+  - add_factory:
+      by_name: BinaryExpr
+      factory:
+        name: and
+        comments:
+          - "\"intersection\" logical/set binary operator."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/operators/#logical-set-binary-operators"
+        arguments:
+          - *left_expr_argument
+          - *right_expr_argument
+        options:
+          - name: op
+            parameters:
+              - {constant: {value: "and", type: *type_ref_binary_op}}
+          - name: left
+            parameters:
+              - { argument: *left_expr_argument }
+          - name: right
+            parameters:
+              - { argument: *right_expr_argument }
+
+  # or
+  - add_factory:
+      by_name: BinaryExpr
+      factory:
+        name: or
+        comments:
+          - "\"union\" logical/set binary operator."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/operators/#logical-set-binary-operators"
+        arguments:
+          - *left_expr_argument
+          - *right_expr_argument
+        options:
+          - name: op
+            parameters:
+              - {constant: {value: "or", type: *type_ref_binary_op}}
+          - name: left
+            parameters:
+              - { argument: *left_expr_argument }
+          - name: right
+            parameters:
+              - { argument: *right_expr_argument }
+
+  # unless
+  - add_factory:
+      by_name: BinaryExpr
+      factory:
+        name: unless
+        comments:
+          - "\"complement\" logical/set binary operator."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/operators/#logical-set-binary-operators"
+        arguments:
+          - *left_expr_argument
+          - *right_expr_argument
+        options:
+          - name: op
+            parameters:
+              - {constant: {value: "unless", type: *type_ref_binary_op}}
+          - name: left
+            parameters:
+              - { argument: *left_expr_argument }
+          - name: right
+            parameters:
+              - { argument: *right_expr_argument }
+
+  # atan2
+  - add_factory:
+      by_name: BinaryExpr
+      factory:
+        name: atan2
+        comments:
+          - "Arc tangent binary operator. Works in radians."
+          - "Trigonometric operators allow trigonometric functions to be executed on two vectors using vector matching, which isn't available with normal functions."
+          - "They act in the same manner as arithmetic operators."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/operators/#trigonometric-binary-operators"
+        arguments:
+          - *left_expr_argument
+          - *right_expr_argument
+        options:
+          - name: op
+            parameters:
+              - {constant: {value: "atan2", type: *type_ref_binary_op}}
+          - name: left
+            parameters:
+              - { argument: *left_expr_argument }
+          - name: right
+            parameters:
+              - { argument: *right_expr_argument }
+
+  - add_option:
+      by_name: BinaryExpr
+      option:
+        name: ignoring
+        comments:
+          - "Allows ignoring certain labels when matching."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/operators/#one-to-one-vector-matches"
+        arguments:
+          - name: labels
+            type: &type_array_str
+              kind: array
+              array:
+                value_type: { kind: scalar, scalar: { scalar_kind: string } }
+        assignments:
+          - method: direct
+            path: matchType
+            value: { constant: ignore }
+          - method: direct
+            path: matchLabels
+            value: { argument: { name: labels, type: *type_array_str } }
+
+  - add_option:
+      by_name: BinaryExpr
+      option:
+        name: on
+        comments:
+          - "Allows reducing the set of considered labels to a provided list when matching."
+          - "See https://prometheus.io/docs/prometheus/latest/querying/operators/#one-to-one-vector-matches"
+        arguments:
+          - name: labels
+            type: *type_array_str
+        assignments:
+          - method: direct
+            path: matchType
+            value: { constant: 'on' }
+          - method: direct
+            path: matchLabels
+            value: { argument: { name: labels, type: *type_array_str } }
+
+
+  - add_option:
+      by_name: BinaryExpr
+      option:
+        name: group_left
+        comments:
+          - "See https://prometheus.io/docs/prometheus/latest/querying/operators/#many-to-one-and-one-to-many-vector-matches"
+        arguments:
+          - name: labels
+            type: *type_array_str
+        assignments:
+          - method: direct
+            path: groupModifier
+            value: { constant: left }
+          - method: direct
+            path: groupLabels
+            value: { argument: { name: labels, type: *type_array_str } }
+
+  - add_option:
+      by_name: BinaryExpr
+      option:
+        name: group_right
+        comments:
+          - "See https://prometheus.io/docs/prometheus/latest/querying/operators/#many-to-one-and-one-to-many-vector-matches"
+        arguments:
+          - name: labels
+            type: &type_array_str
+              kind: array
+              array:
+                value_type: { kind: scalar, scalar: { scalar_kind: string } }
+        assignments:
+          - method: direct
+            path: groupModifier
+            value: { constant: right }
+          - method: direct
+            path: groupLabels
+            value: { argument: { name: labels, type: *type_array_str } }
+
+options:
+  - omit: { by_name: BinaryExpr.matchType }
+  - omit: { by_name: BinaryExpr.matchLabels }
+  - omit: { by_name: BinaryExpr.groupModifier }
+  - omit: { by_name: BinaryExpr.groupLabels }

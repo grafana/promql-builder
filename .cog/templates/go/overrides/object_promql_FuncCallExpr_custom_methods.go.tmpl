@@ -1,0 +1,18 @@
+{{- define "object_promql_FuncCallExpr_custom_methods" }}
+{{- $strings := importStdPkg "strings" }}
+func (expr FuncCallExpr) String() string {
+    var buffer {{ $strings }}.Builder
+
+    buffer.WriteString(expr.Function)
+    buffer.WriteString("(")
+    for i, arg := range expr.Args {
+        buffer.WriteString(arg.String())
+        if i != len(expr.Args)-1 {
+            buffer.WriteString(", ")
+        }
+    }
+    buffer.WriteString(")")
+
+    return buffer.String()
+}
+{{- end }}

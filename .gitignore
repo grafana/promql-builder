@@ -1,0 +1,8 @@
+/workspace
+/.devbox
+/build
+/*/dist
+/typescript/yarn.lock
+
+node_modules
+__pycache__

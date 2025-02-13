@@ -1,6 +1,6 @@
 {
   "name": "@grafana/promql-builder",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Library to compose PromQL queries in Typescript.",
   "keywords": [
     "observability",

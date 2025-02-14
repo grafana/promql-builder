@@ -133,7 +133,56 @@ Python or Typescript.
 === "Typescript"
 
     ```typescript
-    // TODO
+    import * as promql from "@grafana/promql-builder";
+
+    // time() - demo_batch_last_success_timestamp_seconds > 3600
+    function batchJobsWithNoSuccessInLastHour() {
+        return promql.gt(
+            promql.sub(
+                promql.time(),
+                promql.vector('demo_batch_last_success_timestamp_seconds'),
+            ),
+            promql.n(3600)
+        );
+    }
+
+    // method_code:http_errors:rate5m{code="500"} / ignoring(code) method:http_requests:rate5m
+    function errorRatioPerHTTPMethod() {
+        return promql.div(
+            promql.vector("method_code:http_errors:rate5m").label("code", "500"),
+            promql.vector("method:http_requests:rate5m"),
+        ).ignoring(["code"]);
+    }
+
+    // Free disk space per device
+    // sum by(device) (node_filesystem_free_bytes{machine="foo"})
+    function freeDiskSpacePerDevice() {
+        return promql.sum(promql.vector("free_disk_space_per_device").label("machine", "foo")).by(["device"]);
+    }
+
+    // 90th percentile request latency over last 5 minutes per path and method
+    // histogram_quantile(0.9, sum by(le, path, method) (
+    //	rate(demo_api_request_duration_seconds_bucket[5m])
+    // ))
+    function requestLatency90thPercentilePerPathAndMethod() {
+        return promql.histogramQuantile(
+            0.9,
+            promql.sum(
+                promql.rate(
+                    promql.vector("demo_api_request_duration_seconds_bucket").range("5m"),
+                ),
+            ).by(["le", "path", "method"]),
+        );
+    }
+
+    const expressions = [
+        freeDiskSpacePerDevice(),
+        batchJobsWithNoSuccessInLastHour(),
+        errorRatioPerHTTPMethod(),
+        requestLatency90thPercentilePerPathAndMethod(),
+    ];
+
+    expressions.forEach(expression => console.log(expression.toString()))
     ```
 
 ## Maturity

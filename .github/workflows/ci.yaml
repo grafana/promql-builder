@@ -59,7 +59,6 @@ jobs:
           TERM: 'xterm'
           WORKSPACE_PATH: /tmp/promql-builder-current
           CLEANUP_WORKSPACE: 'no'
-          SKIP_VALIDATION: 'yes'
           LOG_LEVEL: '7' # debug
           GOGC: 'off'
 

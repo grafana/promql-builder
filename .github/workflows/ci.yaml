@@ -4,6 +4,7 @@ on:
 
 env:
   DEVBOX_VERSION: '0.13.1'
+  PROMQL_BUILDER_REPO: 'https://github.com/grafana/promql-builder.git'
 
 permissions:
   contents: read
@@ -29,3 +30,96 @@ jobs:
         run: |
           cog inspect --config .cog/config.yaml \
             --ir builders
+
+  diff_preview:
+    name: Generate diff
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 #v4.2.2
+
+      - name: Setup cog
+        uses: ./.github/actions/setup-cog
+
+      - name: Install devbox
+        uses: jetify-com/devbox-install-action@a03caf5813591bc882139eba6ae947930a83a427 #v0.11.0
+        with:
+          enable-cache: 'true'
+          devbox-version: ${{ env.DEVBOX_VERSION }}
+
+      - name: Dry-run release with current branch
+        run: |
+          git config --global user.email "cog-ci@grafana.com"
+          git config --global user.name "cog - CI"
+
+          devbox run ./scripts/release.sh
+
+          mv /tmp/promql-builder-current/promql-builder ./promql-builder-current
+        env:
+          TERM: 'xterm'
+          WORKSPACE_PATH: /tmp/promql-builder-current
+          CLEANUP_WORKSPACE: 'no'
+          SKIP_VALIDATION: 'yes'
+          LOG_LEVEL: '7' # debug
+          GOGC: 'off'
+
+      - name: Checkout main branch
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 #v4.2.2
+        with:
+          ref: main
+          path: promql-builder-main
+
+      - name: Preview diff
+        run: |
+          cat <<'EOF' > preview.md
+          <!-- promql-builder-diff-preview-marker -->
+          
+          **Note:** the diff show code changes that would be introduced by this PR.
+          
+          <details>
+          <summary>
+          
+          ### 🔎 Changes to `promql-builder@main`
+          
+          </summary>
+          
+          ```patch
+          EOF
+          
+          diff \
+            --new-file \
+            --unidirectional-new-file \
+            --color=never \
+            --unified \
+            --recursive \
+            --exclude='.git' \
+            --exclude='gradle.properties' \
+            --exclude='pyproject.toml' \
+            --exclude='package.json' \
+            --exclude='*.md' \
+            ./promql-builder-main ./promql-builder-current >> preview.md || true # diff returns 1 if the two targets have differences
+          
+          cat <<'EOF' >> preview.md
+          ```
+          </details>
+          EOF
+
+      - name: Find preview comment
+        uses: peter-evans/find-comment@v3
+        id: preview-comment-find
+        # only run on main repo, and not on dependabot PRs
+        if: "!contains(github.actor, 'dependabot') && github.repository == 'grafana/promql-builder'"
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: 'github-actions[bot]'
+          body-includes: 'promql-builder-diff-preview-marker'
+
+      - name: Upsert preview comment
+        uses: peter-evans/create-or-update-comment@v4
+        # only run on main repo, and not on dependabot PRs
+        if: "!contains(github.actor, 'dependabot') && github.repository == 'grafana/promql-builder'"
+        with:
+          comment-id: ${{ steps.preview-comment-find.outputs.comment-id }}
+          issue-number: ${{ github.event.pull_request.number }}
+          edit-mode: replace
+          body-path: './preview.md'

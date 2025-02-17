@@ -3,6 +3,7 @@
 /build
 /*/dist
 /typescript/yarn.lock
+/examples/*/vendor
 
 node_modules
 __pycache__

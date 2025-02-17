@@ -1,0 +1,6 @@
+{{- define "builder_promql_NumberLiteral_custom_methods" }}
+
+func (builder NumberLiteralBuilder) String() string {
+    return builder.internal.String()
+}
+{{- end }}

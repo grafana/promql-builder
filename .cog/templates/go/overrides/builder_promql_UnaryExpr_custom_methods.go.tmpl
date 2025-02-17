@@ -1,0 +1,6 @@
+{{- define "builder_promql_UnaryExpr_custom_methods" }}
+
+func (builder UnaryExprBuilder) String() string {
+    return builder.internal.String()
+}
+{{- end }}

@@ -1,0 +1,6 @@
+{{- define "builder_promql_FuncCallExpr_custom_methods" }}
+
+func (builder FuncCallExprBuilder) String() string {
+    return builder.internal.String()
+}
+{{- end }}

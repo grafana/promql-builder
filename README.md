@@ -57,10 +57,10 @@ func requestLatency90thPercentilePerPathAndMethod() *promql.FuncCallExprBuilder 
 }
 
 func main() {
-    fmt.Println(batchJobsWithNoSuccessInLastHour().String())
-    fmt.Println(errorRatioPerHTTPMethod().String())
-    fmt.Println(freeDiskSpacePerDevice().String())
-    fmt.Println(requestLatency90thPercentilePerPathAndMethod().String())
+    fmt.Println(batchJobsWithNoSuccessInLastHour())
+    fmt.Println(errorRatioPerHTTPMethod())
+    fmt.Println(freeDiskSpacePerDevice())
+    fmt.Println(requestLatency90thPercentilePerPathAndMethod())
 }
 ```
 

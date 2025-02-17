@@ -4,6 +4,8 @@
 /*/dist
 /typescript/yarn.lock
 /examples/*/vendor
+/examples/*/node_modules
+/examples/*/.yarn/
 
 node_modules
 __pycache__

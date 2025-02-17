@@ -1,0 +1,6 @@
+{{- define "builder_promql_BinaryExpr_custom_methods" }}
+
+func (builder BinaryExprBuilder) String() string {
+    return builder.internal.String()
+}
+{{- end }}

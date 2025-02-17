@@ -1,0 +1,6 @@
+{{- define "builder_promql_LabelSelector_custom_methods" }}
+
+func (builder LabelSelectorBuilder) String() string {
+    return builder.internal.String()
+}
+{{- end }}

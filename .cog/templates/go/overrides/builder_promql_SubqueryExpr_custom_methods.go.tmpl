@@ -1,0 +1,6 @@
+{{- define "builder_promql_SubqueryExpr_custom_methods" }}
+
+func (builder SubqueryExprBuilder) String() string {
+    return builder.internal.String()
+}
+{{- end }}

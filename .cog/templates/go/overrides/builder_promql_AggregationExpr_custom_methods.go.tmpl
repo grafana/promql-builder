@@ -1,0 +1,6 @@
+{{- define "builder_promql_AggregationExpr_custom_methods" }}
+
+func (builder AggregationExprBuilder) String() string {
+    return builder.internal.String()
+}
+{{- end }}

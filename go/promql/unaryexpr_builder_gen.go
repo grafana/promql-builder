@@ -54,6 +54,10 @@ func (builder *UnaryExprBuilder) Build() (Expr, error) {
 	return *builder.internal, nil
 }
 
+func (builder UnaryExprBuilder) String() string {
+	return builder.internal.String()
+}
+
 func (builder *UnaryExprBuilder) Op(op UnaryOp) *UnaryExprBuilder {
 	if builder.internal.UnaryExpr == nil {
 		builder.internal.UnaryExpr = NewUnaryExpr()

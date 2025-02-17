@@ -863,6 +863,10 @@ func (builder *FuncCallExprBuilder) Build() (Expr, error) {
 	return *builder.internal, nil
 }
 
+func (builder FuncCallExprBuilder) String() string {
+	return builder.internal.String()
+}
+
 // Name of the function.
 func (builder *FuncCallExprBuilder) Function(function string) *FuncCallExprBuilder {
 	if builder.internal.FuncCallExpr == nil {

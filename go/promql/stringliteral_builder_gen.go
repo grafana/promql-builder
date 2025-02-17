@@ -44,6 +44,10 @@ func (builder *StringLiteralBuilder) Build() (Expr, error) {
 	return *builder.internal, nil
 }
 
+func (builder StringLiteralBuilder) String() string {
+	return builder.internal.String()
+}
+
 func (builder *StringLiteralBuilder) Value(value string) *StringLiteralBuilder {
 	if builder.internal.StringLiteralExpr == nil {
 		builder.internal.StringLiteralExpr = NewStringLiteralExpr()

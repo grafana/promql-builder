@@ -45,6 +45,10 @@ func (builder *VectorExprBuilder) Build() (Expr, error) {
 	return *builder.internal, nil
 }
 
+func (builder VectorExprBuilder) String() string {
+	return builder.internal.String()
+}
+
 // Metric name.
 func (builder *VectorExprBuilder) Metric(metric string) *VectorExprBuilder {
 	if builder.internal.VectorExpr == nil {

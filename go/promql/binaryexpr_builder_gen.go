@@ -214,6 +214,10 @@ func (builder *BinaryExprBuilder) Build() (Expr, error) {
 	return *builder.internal, nil
 }
 
+func (builder BinaryExprBuilder) String() string {
+	return builder.internal.String()
+}
+
 func (builder *BinaryExprBuilder) Op(op BinaryOp) *BinaryExprBuilder {
 	if builder.internal.BinaryExpr == nil {
 		builder.internal.BinaryExpr = NewBinaryExpr()

@@ -181,6 +181,10 @@ func (builder *AggregationExprBuilder) Build() (Expr, error) {
 	return *builder.internal, nil
 }
 
+func (builder AggregationExprBuilder) String() string {
+	return builder.internal.String()
+}
+
 func (builder *AggregationExprBuilder) Op(op AggregationOp) *AggregationExprBuilder {
 	if builder.internal.AggregationExpr == nil {
 		builder.internal.AggregationExpr = NewAggregationExpr()

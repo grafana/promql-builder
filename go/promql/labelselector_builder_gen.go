@@ -31,6 +31,10 @@ func (builder *LabelSelectorBuilder) Build() (LabelSelector, error) {
 	return *builder.internal, nil
 }
 
+func (builder LabelSelectorBuilder) String() string {
+	return builder.internal.String()
+}
+
 // Name of the label to select.
 func (builder *LabelSelectorBuilder) Name(name string) *LabelSelectorBuilder {
 	builder.internal.Name = name

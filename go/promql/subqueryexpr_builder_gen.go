@@ -46,6 +46,10 @@ func (builder *SubqueryExprBuilder) Build() (Expr, error) {
 	return *builder.internal, nil
 }
 
+func (builder SubqueryExprBuilder) String() string {
+	return builder.internal.String()
+}
+
 func (builder *SubqueryExprBuilder) Expr(expr cog.Builder[Expr]) *SubqueryExprBuilder {
 	if builder.internal.SubqueryExpr == nil {
 		builder.internal.SubqueryExpr = NewSubqueryExpr()

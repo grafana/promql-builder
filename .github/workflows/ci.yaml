@@ -8,8 +8,7 @@ env:
 
 permissions:
   contents: read
-  # to comment on PRs
-  pull-requests: write
+  pull-requests: read
 
 defaults:
   run:
@@ -22,6 +21,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 #v4.2.2
+        with:
+          persist-credentials: false
 
       - name: Setup cog
         uses: ./.github/actions/setup-cog
@@ -30,13 +31,19 @@ jobs:
         run: |
           cog inspect --config .cog/config.yaml \
             --ir builders
+        env:
+          PATH: ${{ steps.setup-cog.outputs.bin-path }}:${{ env.PATH }}
 
   diff_preview:
     name: Generate diff
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
 
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 #v4.2.2
+        with:
+          persist-credentials: false
 
       - name: Setup cog
         uses: ./.github/actions/setup-cog
@@ -61,12 +68,14 @@ jobs:
           CLEANUP_WORKSPACE: 'no'
           LOG_LEVEL: '7' # debug
           GOGC: 'off'
+          PATH: ${{ steps.setup-cog.outputs.bin-path }}:${{ env.PATH }}
 
       - name: Checkout main branch
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 #v4.2.2
         with:
           ref: main
           path: promql-builder-main
+          persist-credentials: false
 
       - name: Preview diff
         run: |
@@ -104,7 +113,7 @@ jobs:
           EOF
 
       - name: Find preview comment
-        uses: peter-evans/find-comment@v3
+        uses: peter-evans/find-comment@a0b5124c1959e5e7c25efa20d957d507d54a6f4e  #v3.1.0
         id: preview-comment-find
         # only run on main repo, and not on dependabot PRs
         if: "!contains(github.actor, 'dependabot') && github.repository == 'grafana/promql-builder'"
@@ -114,7 +123,7 @@ jobs:
           body-includes: 'promql-builder-diff-preview-marker'
 
       - name: Upsert preview comment
-        uses: peter-evans/create-or-update-comment@v4
+        uses: peter-evans/create-or-update-comment@17c956346987a35d40d2d723c6930f90f594400d #v4.0.0
         # only run on main repo, and not on dependabot PRs
         if: "!contains(github.actor, 'dependabot') && github.repository == 'grafana/promql-builder'"
         with:

@@ -16,6 +16,8 @@ def __str__(self):
 
         if self.group_labels is not None and len(self.group_labels) != 0:
             buffer += "(" + ", ".join(self.group_labels) + ") "
+        else:
+            buffer += "() "
 
     buffer += "(" + str(self.right) + ")"
 

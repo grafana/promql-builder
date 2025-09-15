@@ -160,10 +160,14 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      id-token: write
+      id-token: write  # mandatory for trusted publishing
 
     env:
       NODE_VERSION: '22'
+
+    environment:
+      name: typescript
+      url: https://www.npmjs.com/package/@grafana/promql-builder
 
     defaults:
       run:
@@ -176,20 +180,18 @@ jobs:
           persist-credentials: false
 
       - name: Use Node.js ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 #v5.0.0
         with:
           node-version: ${{ env.NODE_VERSION }}
           scope: '@grafana'
           registry-url: 'https://registry.npmjs.org'
 
       - name: Install dependencies
-        run: yarn install
+        run: node ci
 
       - name: Build
-        run: yarn build
+        run: node build
 
       - name: Publish to NPM registry
         if: ${{ ! inputs.dryRun }}
-        run: yarn publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: node publish --access public

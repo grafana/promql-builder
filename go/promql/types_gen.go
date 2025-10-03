@@ -453,11 +453,11 @@ func (expr BinaryExpr) String() string {
 			buffer.WriteString("group_right")
 		}
 
+		buffer.WriteString("(")
 		if len(expr.GroupLabels) != 0 {
-			buffer.WriteString("(")
 			buffer.WriteString(strings.Join(expr.GroupLabels, ", "))
-			buffer.WriteString(") ")
 		}
+		buffer.WriteString(") ")
 	}
 
 	buffer.WriteString("(")

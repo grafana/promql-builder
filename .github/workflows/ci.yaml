@@ -123,7 +123,7 @@ jobs:
           body-includes: 'promql-builder-diff-preview-marker'
 
       - name: Upsert preview comment
-        uses: peter-evans/create-or-update-comment@17c956346987a35d40d2d723c6930f90f594400d #v4.0.0
+        uses: peter-evans/create-or-update-comment@71345be0265236311c031f5c7866368bd1eff043 # v4.0.0
         # only run on main repo, and not on dependabot PRs
         if: "!contains(github.actor, 'dependabot') && github.repository == 'grafana/promql-builder'"
         with:

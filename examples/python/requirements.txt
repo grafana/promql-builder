@@ -1,1 +1,1 @@
-promql_builder==0.0.3
+promql_builder==0.0.4

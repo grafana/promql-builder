@@ -11,7 +11,7 @@
     "build:watch": "tsc -w -p tsconfig.json"
   },
   "dependencies": {
-    "@grafana/promql-builder": "^0.0.3"
+    "@grafana/promql-builder": "^0.0.4"
   },
   "devDependencies": {
     "@types/node": "~20",

@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/main/.schema/devbox.schema.json",
   "packages": [
-    "python312@3.12",
+    "python312@3.12.13",
     "go@1.23",
     "yarn@1.22",
     "nodejs-slim_22@latest"

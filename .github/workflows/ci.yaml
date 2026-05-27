@@ -31,7 +31,9 @@ jobs:
   diff_preview:
     name: Generate diff
     runs-on: ubuntu-latest
+
     permissions:
+      contents: read
       pull-requests: write
 
     steps:
@@ -59,7 +61,6 @@ jobs:
           CLEANUP_WORKSPACE: 'no'
           LOG_LEVEL: '7' # debug
           GOGC: 'off'
-          PATH: ${{ steps.setup-cog.outputs.bin-path }}:${{ env.PATH }}
 
       - name: Checkout main branch
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -68,23 +69,8 @@ jobs:
           path: promql-builder-main
           persist-credentials: false
 
-      - name: Preview diff
+      - name: Generate diff
         run: |
-          cat <<'EOF' > preview.md
-          <!-- promql-builder-diff-preview-marker -->
-          
-          **Note:** the diff show code changes that would be introduced by this PR.
-          
-          <details>
-          <summary>
-          
-          ### 🔎 Changes to `promql-builder@main`
-          
-          </summary>
-          
-          ```patch
-          EOF
-          
           diff \
             --new-file \
             --unidirectional-new-file \
@@ -96,7 +82,36 @@ jobs:
             --exclude='pyproject.toml' \
             --exclude='package.json' \
             --exclude='*.md' \
-            ./promql-builder-main ./promql-builder-current >> preview.md || true # diff returns 1 if the two targets have differences
+            ./promql-builder-main ./promql-builder-current >> diff.patch || true # diff returns 1 if the two targets have differences
+
+      - name: Upload diff as artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        id: artifact-upload-step
+        with:
+          name: diff.patch
+          path: diff.patch
+          retention-days: 7
+
+      - name: Preview diff
+        run: |
+          cat <<'EOF' > preview.md
+          <!-- promql-builder-diff-preview-marker -->
+          
+          **Note:** the diff show code changes that would be introduced by this PR.
+
+          [See full diff](${{ steps.artifact-upload-step.outputs.artifact-url }}).
+          
+          <details>
+          <summary>
+          
+          ### 🔎 Changes to `promql-builder@main`
+          
+          </summary>
+          
+          ```patch
+          EOF
+          
+          cat diff.patch >> preview.md
           
           cat <<'EOF' >> preview.md
           ```

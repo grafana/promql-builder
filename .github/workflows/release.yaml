@@ -63,7 +63,6 @@ jobs:
           DRY_RUN: ${{ inputs.dryRun == true && 'yes' || 'no' }}
           SKIP_VALIDATION: ${{ inputs.skipValidation == true && 'yes' || 'no' }}
           VERSION: ${{ inputs.version }}
-          PATH: ${{ steps.setup-cog.outputs.bin-path }}:${{ env.PATH }}
 
   build_docs:
     needs: codegen

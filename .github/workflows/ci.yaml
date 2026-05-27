@@ -3,7 +3,7 @@ on:
   pull_request: ~
 
 env:
-  DEVBOX_VERSION: '0.13.1'
+  DEVBOX_VERSION: '0.17.2'
   PROMQL_BUILDER_REPO: 'https://github.com/grafana/promql-builder.git'
 
 permissions:
@@ -20,36 +20,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 #v4.2.2
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           persist-credentials: false
 
-      - name: Setup cog
-        uses: ./.github/actions/setup-cog
-
       - name: Validate cog's config
         run: |
-          cog inspect --config .cog/config.yaml \
-            --ir builders
-        env:
-          PATH: ${{ steps.setup-cog.outputs.bin-path }}:${{ env.PATH }}
+          make validate-config
 
   diff_preview:
     name: Generate diff
     runs-on: ubuntu-latest
+
     permissions:
+      contents: read
       pull-requests: write
 
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 #v4.2.2
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           persist-credentials: false
 
-      - name: Setup cog
-        uses: ./.github/actions/setup-cog
-
       - name: Install devbox
-        uses: jetify-com/devbox-install-action@a03caf5813591bc882139eba6ae947930a83a427 #v0.11.0
+        uses: jetify-com/devbox-install-action@8c6a66ed6273138b1915457069de78cb52fe3bd7 # v0.15.0
         with:
           enable-cache: 'true'
           devbox-version: ${{ env.DEVBOX_VERSION }}
@@ -59,7 +52,7 @@ jobs:
           git config --global user.email "cog-ci@grafana.com"
           git config --global user.name "cog - CI"
 
-          devbox run ./scripts/release.sh
+          make release
 
           mv /tmp/promql-builder-current/promql-builder ./promql-builder-current
         env:
@@ -68,32 +61,16 @@ jobs:
           CLEANUP_WORKSPACE: 'no'
           LOG_LEVEL: '7' # debug
           GOGC: 'off'
-          PATH: ${{ steps.setup-cog.outputs.bin-path }}:${{ env.PATH }}
 
       - name: Checkout main branch
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 #v4.2.2
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           ref: main
           path: promql-builder-main
           persist-credentials: false
 
-      - name: Preview diff
+      - name: Generate diff
         run: |
-          cat <<'EOF' > preview.md
-          <!-- promql-builder-diff-preview-marker -->
-          
-          **Note:** the diff show code changes that would be introduced by this PR.
-          
-          <details>
-          <summary>
-          
-          ### 🔎 Changes to `promql-builder@main`
-          
-          </summary>
-          
-          ```patch
-          EOF
-          
           diff \
             --new-file \
             --unidirectional-new-file \
@@ -105,7 +82,36 @@ jobs:
             --exclude='pyproject.toml' \
             --exclude='package.json' \
             --exclude='*.md' \
-            ./promql-builder-main ./promql-builder-current >> preview.md || true # diff returns 1 if the two targets have differences
+            ./promql-builder-main ./promql-builder-current >> diff.patch || true # diff returns 1 if the two targets have differences
+
+      - name: Upload diff as artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        id: artifact-upload-step
+        with:
+          name: diff.patch
+          path: diff.patch
+          retention-days: 7
+
+      - name: Preview diff
+        run: |
+          cat <<'EOF' > preview.md
+          <!-- promql-builder-diff-preview-marker -->
+          
+          **Note:** the diff show code changes that would be introduced by this PR.
+
+          [See full diff](${{ steps.artifact-upload-step.outputs.artifact-url }}).
+          
+          <details>
+          <summary>
+          
+          ### 🔎 Changes to `promql-builder@main`
+          
+          </summary>
+          
+          ```patch
+          EOF
+          
+          cat diff.patch >> preview.md
           
           cat <<'EOF' >> preview.md
           ```
@@ -113,7 +119,7 @@ jobs:
           EOF
 
       - name: Find preview comment
-        uses: peter-evans/find-comment@a0b5124c1959e5e7c25efa20d957d507d54a6f4e  #v3.1.0
+        uses: peter-evans/find-comment@b30e6a3c0ed37e7c023ccd3f1db5c6c0b0c23aad #v4.0.0
         id: preview-comment-find
         # only run on main repo, and not on dependabot PRs
         if: "!contains(github.actor, 'dependabot') && github.repository == 'grafana/promql-builder'"
@@ -123,7 +129,7 @@ jobs:
           body-includes: 'promql-builder-diff-preview-marker'
 
       - name: Upsert preview comment
-        uses: peter-evans/create-or-update-comment@17c956346987a35d40d2d723c6930f90f594400d #v4.0.0
+        uses: peter-evans/create-or-update-comment@e8674b075228eee787fea43ef493e45ece1004c9 #v5.0.0
         # only run on main repo, and not on dependabot PRs
         if: "!contains(github.actor, 'dependabot') && github.repository == 'grafana/promql-builder'"
         with:

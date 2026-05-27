@@ -1,13 +1,13 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/grafana/cog/main/schemas/veneers.json
 
-language: all
+languages: [all]
 
 package: promql
 
 builders:
   # labelEq
   - add_factory:
-      by_name: Label
+      by_name: LabelSelector
       factory:
         name: labelEq
         arguments:
@@ -32,11 +32,11 @@ builders:
                   value: "="
                   type: &type_ref_label_op
                     kind: ref
-                    ref: {referred_pkg: promql, referred_type: LabelOperator}
+                    ref: {referred_pkg: promql, referred_type: LabelMatchingOperator}
 
   # labelNeq
   - add_factory:
-      by_name: Label
+      by_name: LabelSelector
       factory:
         name: labelNeq
         arguments:
@@ -55,7 +55,7 @@ builders:
 
   # labelMatchRegexp
   - add_factory:
-      by_name: Label
+      by_name: LabelSelector
       factory:
         name: labelMatchRegexp
         arguments:
@@ -74,7 +74,7 @@ builders:
 
   # labelNotMatchRegexp
   - add_factory:
-      by_name: Label
+      by_name: LabelSelector
       factory:
         name: labelNotMatchRegexp
         arguments:

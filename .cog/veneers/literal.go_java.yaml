@@ -1,16 +1,16 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/grafana/cog/main/schemas/veneers.json
 
-language: python
+languages: [go, java]
 
 package: promql
 
 builders:
   - add_factory:
-      by_name: StringLiteralExpr
+      by_name: StringLiteral
       factory:
         name: s
         comments:
-          - "Shortcut to turn a string into a StringLiteralExpr expression."
+          - "Shortcut to turn a string into a StringLiteral expression."
         arguments:
           - &value_str_argument
             name: value
@@ -23,11 +23,11 @@ builders:
               - { argument: *value_str_argument }
 
   - add_factory:
-      by_name: NumberLiteralExpr
+      by_name: NumberLiteral
       factory:
         name: n
         comments:
-          - "Shortcut to turn a number into a NumberLiteralExpr expression."
+          - "Shortcut to turn a number into a NumberLiteral expression."
         arguments:
           - &value_float_argument
             name: value

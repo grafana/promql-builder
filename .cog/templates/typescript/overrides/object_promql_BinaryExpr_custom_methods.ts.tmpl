@@ -18,6 +18,8 @@ const binaryExprToString = (expr: BinaryExpr): string => {
 
         if (expr.groupLabels && expr.groupLabels.length !== 0) {
             buffer += `(${expr.groupLabels.join(', ')}) `;
+        } else {
+            buffer += `() `;
         }
     }
 

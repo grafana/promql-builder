@@ -29,3 +29,7 @@ release: install-cog
 .PHONY: docs
 docs:
 	$(RUN_DEVBOX) ./scripts/build-docs.sh
+
+.PHONY: serve-docs
+serve-docs:
+	SERVE=please $(RUN_DEVBOX) ./scripts/build-docs.sh

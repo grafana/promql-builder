@@ -44,9 +44,6 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Setup cog
-        uses: ./.github/actions/setup-cog
-
       - name: Install devbox
         uses: jetify-com/devbox-install-action@a03caf5813591bc882139eba6ae947930a83a427 #v0.11.0
         with:
@@ -59,7 +56,7 @@ jobs:
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           git config --global url."https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/".insteadOf "git@github.com:"
 
-          devbox run ./scripts/release.sh "${VERSION}"
+          make release
         env:
           TERM: 'xterm'
           LOG_LEVEL: '7' # debug
@@ -96,7 +93,7 @@ jobs:
 
       - name: Build documentation website
         run: |
-          devbox run ./scripts/build-docs.sh
+          make docs
 
       - name: Upload static files as artifact
         id: deployment

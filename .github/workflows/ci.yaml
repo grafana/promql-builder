@@ -24,15 +24,9 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Setup cog
-        uses: ./.github/actions/setup-cog
-
       - name: Validate cog's config
         run: |
-          cog inspect --config .cog/config.yaml \
-            --ir builders
-        env:
-          PATH: ${{ steps.setup-cog.outputs.bin-path }}:${{ env.PATH }}
+          make validate-config
 
   diff_preview:
     name: Generate diff
@@ -45,9 +39,6 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Setup cog
-        uses: ./.github/actions/setup-cog
-
       - name: Install devbox
         uses: jetify-com/devbox-install-action@a03caf5813591bc882139eba6ae947930a83a427 #v0.11.0
         with:
@@ -59,7 +50,7 @@ jobs:
           git config --global user.email "cog-ci@grafana.com"
           git config --global user.name "cog - CI"
 
-          devbox run ./scripts/release.sh
+          make release
 
           mv /tmp/promql-builder-current/promql-builder ./promql-builder-current
         env:

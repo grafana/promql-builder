@@ -15,7 +15,7 @@ source "${__dir}/libs/git.sh"
 
 # These environment variables can be used to alter the behavior of the release script.
 
-VERSION=${1:-"0.0.0"} # The current version being released
+VERSION=${VERSION:-"0.0.0"} # The current version being released
 
 DRY_RUN=${DRY_RUN:-"yes"} # Some kind of fail-safe to ensure that we're only pushing something when we mean it.
 

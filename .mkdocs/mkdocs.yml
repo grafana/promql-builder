@@ -4,8 +4,6 @@ site_author: 'Grafana Labs'
 repo_name: "grafana/promql-builder"
 repo_url: "https://github.com/grafana/promql-builder"
 
-plugins: []
-
 markdown_extensions:
   - admonition
   - pymdownx.magiclink
@@ -37,12 +35,10 @@ theme:
   name: "material"
   features:
     - navigation.tabs
-    - navigation.indexes
     - navigation.top
     - navigation.prune
     - search.highlight
-
-  custom_dir: overrides
+    - toc.follow
 
   logo: "assets/logo.svg"
 

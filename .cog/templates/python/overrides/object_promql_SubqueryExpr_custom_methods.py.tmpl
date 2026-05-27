@@ -8,6 +8,8 @@ def __str__(self):
         if self.resolution is not None:
             buffer += ":"+self.resolution
 
+        buffer += "]"
+
     if self.offset != "":
         buffer += " offset " + self.offset
 

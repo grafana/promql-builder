@@ -39,6 +39,9 @@ jobs:
     name: Run codegen and release
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: write # the codegen pipeline commits + creates a tag + pushes back to origin
+
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
@@ -187,11 +190,11 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
 
       - name: Install dependencies
-        run: node ci
+        run: npm install
 
       - name: Build
-        run: node build
+        run: npm run build
 
       - name: Publish to NPM registry
         if: ${{ ! inputs.dryRun }}
-        run: node publish --access public
+        run: npm publish

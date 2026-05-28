@@ -22,6 +22,10 @@ $(COG_BIN):
 validate-config: install-cog
 	$(COG_BIN) inspect --config .cog/config.yaml --ir builders
 
+.PHONY: prepare-release
+prepare-release: install-cog
+	COG_CMD=$(COG_BIN) $(RUN_DEVBOX) ./scripts/prepare-release.sh
+
 .PHONY: release
 release: install-cog
 	COG_CMD=$(COG_BIN) $(RUN_DEVBOX) ./scripts/release.sh

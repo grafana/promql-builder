@@ -28,6 +28,7 @@ jobs:
 
     permissions:
       contents: write # the codegen pipeline commits + creates a tag + pushes back to origin
+      pull-requests: write # to open PRs
 
     outputs:
       is_release: ${{ steps.release.outputs.is_release }}

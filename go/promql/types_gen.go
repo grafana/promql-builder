@@ -181,8 +181,10 @@ type AggregationExpr struct {
 // NewAggregationExpr creates a new AggregationExpr object.
 func NewAggregationExpr() *AggregationExpr {
 	return &AggregationExpr{
-		Type: "aggregationExpr",
-		Expr: *NewExpr(),
+		Type:    "aggregationExpr",
+		Expr:    *NewExpr(),
+		By:      []string{},
+		Without: []string{},
 	}
 }
 
@@ -278,7 +280,8 @@ type VectorExpr struct {
 // NewVectorExpr creates a new VectorExpr object.
 func NewVectorExpr() *VectorExpr {
 	return &VectorExpr{
-		Type: "vectorExpr",
+		Type:   "vectorExpr",
+		Labels: []LabelSelector{},
 	}
 }
 
@@ -453,11 +456,11 @@ func (expr BinaryExpr) String() string {
 			buffer.WriteString("group_right")
 		}
 
+		buffer.WriteString("(")
 		if len(expr.GroupLabels) != 0 {
-			buffer.WriteString("(")
 			buffer.WriteString(strings.Join(expr.GroupLabels, ", "))
-			buffer.WriteString(") ")
 		}
+		buffer.WriteString(") ")
 	}
 
 	buffer.WriteString("(")
@@ -543,6 +546,7 @@ type FuncCallExpr struct {
 func NewFuncCallExpr() *FuncCallExpr {
 	return &FuncCallExpr{
 		Type: "funcCallExpr",
+		Args: []Expr{},
 	}
 }
 

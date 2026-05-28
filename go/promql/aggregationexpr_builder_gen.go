@@ -11,14 +11,14 @@ var _ cog.Builder[Expr] = (*AggregationExprBuilder)(nil)
 // Represents a PromQL expression.
 type AggregationExprBuilder struct {
 	internal *Expr
-	errors   map[string]cog.BuildErrors
+	errors   cog.BuildErrors
 }
 
 func NewAggregationExprBuilder() *AggregationExprBuilder {
 	resource := NewExpr()
 	builder := &AggregationExprBuilder{
 		internal: resource,
-		errors:   make(map[string]cog.BuildErrors),
+		errors:   make(cog.BuildErrors, 0),
 	}
 	if builder.internal.AggregationExpr == nil {
 		builder.internal.AggregationExpr = NewAggregationExpr()
@@ -32,7 +32,9 @@ func NewAggregationExprBuilder() *AggregationExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/operators/#aggregation-operators
 func Sum(vector cog.Builder[Expr]) *AggregationExprBuilder {
 	builder := NewAggregationExprBuilder()
+
 	builder.Op(AggregationOpSum)
+
 	builder.Expr(vector)
 
 	return builder
@@ -42,7 +44,9 @@ func Sum(vector cog.Builder[Expr]) *AggregationExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/operators/#aggregation-operators
 func Min(vector cog.Builder[Expr]) *AggregationExprBuilder {
 	builder := NewAggregationExprBuilder()
+
 	builder.Op(AggregationOpMin)
+
 	builder.Expr(vector)
 
 	return builder
@@ -52,7 +56,9 @@ func Min(vector cog.Builder[Expr]) *AggregationExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/operators/#aggregation-operators
 func Max(vector cog.Builder[Expr]) *AggregationExprBuilder {
 	builder := NewAggregationExprBuilder()
+
 	builder.Op(AggregationOpMax)
+
 	builder.Expr(vector)
 
 	return builder
@@ -62,7 +68,9 @@ func Max(vector cog.Builder[Expr]) *AggregationExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/operators/#aggregation-operators
 func Avg(vector cog.Builder[Expr]) *AggregationExprBuilder {
 	builder := NewAggregationExprBuilder()
+
 	builder.Op(AggregationOpAvg)
+
 	builder.Expr(vector)
 
 	return builder
@@ -72,7 +80,9 @@ func Avg(vector cog.Builder[Expr]) *AggregationExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/operators/#aggregation-operators
 func Group(vector cog.Builder[Expr]) *AggregationExprBuilder {
 	builder := NewAggregationExprBuilder()
+
 	builder.Op(AggregationOpGroup)
+
 	builder.Expr(vector)
 
 	return builder
@@ -82,7 +92,9 @@ func Group(vector cog.Builder[Expr]) *AggregationExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/operators/#aggregation-operators
 func Stddev(vector cog.Builder[Expr]) *AggregationExprBuilder {
 	builder := NewAggregationExprBuilder()
+
 	builder.Op(AggregationOpStddev)
+
 	builder.Expr(vector)
 
 	return builder
@@ -92,7 +104,9 @@ func Stddev(vector cog.Builder[Expr]) *AggregationExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/operators/#aggregation-operators
 func Stdvar(vector cog.Builder[Expr]) *AggregationExprBuilder {
 	builder := NewAggregationExprBuilder()
+
 	builder.Op(AggregationOpStdvar)
+
 	builder.Expr(vector)
 
 	return builder
@@ -102,7 +116,9 @@ func Stdvar(vector cog.Builder[Expr]) *AggregationExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/operators/#aggregation-operators
 func Count(vector cog.Builder[Expr]) *AggregationExprBuilder {
 	builder := NewAggregationExprBuilder()
+
 	builder.Op(AggregationOpCount)
+
 	builder.Expr(vector)
 
 	return builder
@@ -112,7 +128,9 @@ func Count(vector cog.Builder[Expr]) *AggregationExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/operators/#aggregation-operators
 func Quantile(vector cog.Builder[Expr]) *AggregationExprBuilder {
 	builder := NewAggregationExprBuilder()
+
 	builder.Op(AggregationOpQuantile)
+
 	builder.Expr(vector)
 
 	return builder
@@ -122,8 +140,11 @@ func Quantile(vector cog.Builder[Expr]) *AggregationExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/operators/#aggregation-operators
 func CountValues(label string, vector cog.Builder[Expr]) *AggregationExprBuilder {
 	builder := NewAggregationExprBuilder()
+
 	builder.Op(AggregationOpCountValues)
+
 	builder.Expr(vector)
+
 	builder.Param(S(label))
 
 	return builder
@@ -133,8 +154,11 @@ func CountValues(label string, vector cog.Builder[Expr]) *AggregationExprBuilder
 // See https://prometheus.io/docs/prometheus/latest/querying/operators/#aggregation-operators
 func Bottomk(k float64, vector cog.Builder[Expr]) *AggregationExprBuilder {
 	builder := NewAggregationExprBuilder()
+
 	builder.Op(AggregationOpBottomk)
+
 	builder.Expr(vector)
+
 	builder.Param(N(k))
 
 	return builder
@@ -144,8 +168,11 @@ func Bottomk(k float64, vector cog.Builder[Expr]) *AggregationExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/operators/#aggregation-operators
 func Topk(k float64, vector cog.Builder[Expr]) *AggregationExprBuilder {
 	builder := NewAggregationExprBuilder()
+
 	builder.Op(AggregationOpTopk)
+
 	builder.Expr(vector)
+
 	builder.Param(N(k))
 
 	return builder
@@ -155,8 +182,11 @@ func Topk(k float64, vector cog.Builder[Expr]) *AggregationExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/operators/#aggregation-operators
 func Limitk(k float64, vector cog.Builder[Expr]) *AggregationExprBuilder {
 	builder := NewAggregationExprBuilder()
+
 	builder.Op(AggregationOpLimitk)
+
 	builder.Expr(vector)
+
 	builder.Param(N(k))
 
 	return builder
@@ -166,8 +196,11 @@ func Limitk(k float64, vector cog.Builder[Expr]) *AggregationExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/operators/#aggregation-operators
 func LimitRatio(k float64, vector cog.Builder[Expr]) *AggregationExprBuilder {
 	builder := NewAggregationExprBuilder()
+
 	builder.Op(AggregationOpLimitRatio)
+
 	builder.Expr(vector)
+
 	builder.Param(N(k))
 
 	return builder
@@ -178,7 +211,16 @@ func (builder *AggregationExprBuilder) Build() (Expr, error) {
 		return Expr{}, err
 	}
 
+	if len(builder.errors) > 0 {
+		return Expr{}, cog.MakeBuildErrors("promql.aggregationExpr", builder.errors)
+	}
+
 	return *builder.internal, nil
+}
+
+func (builder *AggregationExprBuilder) RecordError(path string, err error) *AggregationExprBuilder {
+	builder.errors = append(builder.errors, cog.MakeBuildErrors(path, err)...)
+	return builder
 }
 
 func (builder AggregationExprBuilder) String() string {
@@ -200,7 +242,7 @@ func (builder *AggregationExprBuilder) Expr(expr cog.Builder[Expr]) *Aggregation
 	}
 	exprResource, err := expr.Build()
 	if err != nil {
-		builder.errors["AggregationExpr.expr"] = err.(cog.BuildErrors)
+		builder.errors = append(builder.errors, err.(cog.BuildErrors)...)
 		return builder
 	}
 	builder.internal.AggregationExpr.Expr = exprResource
@@ -214,7 +256,7 @@ func (builder *AggregationExprBuilder) Param(param cog.Builder[Expr]) *Aggregati
 	}
 	paramResource, err := param.Build()
 	if err != nil {
-		builder.errors["AggregationExpr.param"] = err.(cog.BuildErrors)
+		builder.errors = append(builder.errors, err.(cog.BuildErrors)...)
 		return builder
 	}
 	builder.internal.AggregationExpr.Param = &paramResource

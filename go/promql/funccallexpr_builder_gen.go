@@ -11,14 +11,14 @@ var _ cog.Builder[Expr] = (*FuncCallExprBuilder)(nil)
 // Represents a PromQL expression.
 type FuncCallExprBuilder struct {
 	internal *Expr
-	errors   map[string]cog.BuildErrors
+	errors   cog.BuildErrors
 }
 
 func NewFuncCallExprBuilder() *FuncCallExprBuilder {
 	resource := NewExpr()
 	builder := &FuncCallExprBuilder{
 		internal: resource,
-		errors:   make(map[string]cog.BuildErrors),
+		errors:   make(cog.BuildErrors, 0),
 	}
 	if builder.internal.FuncCallExpr == nil {
 		builder.internal.FuncCallExpr = NewFuncCallExpr()
@@ -32,7 +32,9 @@ func NewFuncCallExprBuilder() *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#abs
 func Abs(v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("abs")
+
 	builder.Arg(v)
 
 	return builder
@@ -43,7 +45,9 @@ func Abs(v cog.Builder[Expr]) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#absent
 func Absent(v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("absent")
+
 	builder.Arg(v)
 
 	return builder
@@ -54,7 +58,9 @@ func Absent(v cog.Builder[Expr]) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#absent_over_time
 func AbsentOverTime(v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("absent_over_time")
+
 	builder.Arg(v)
 
 	return builder
@@ -64,7 +70,9 @@ func AbsentOverTime(v cog.Builder[Expr]) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#ceil
 func Ceil(v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("ceil")
+
 	builder.Arg(v)
 
 	return builder
@@ -74,7 +82,9 @@ func Ceil(v cog.Builder[Expr]) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#changes
 func Changes(v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("changes")
+
 	builder.Arg(v)
 
 	return builder
@@ -84,9 +94,13 @@ func Changes(v cog.Builder[Expr]) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#clamp
 func Clamp(v cog.Builder[Expr], min float64, max float64) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("clamp")
+
 	builder.Arg(v)
+
 	builder.Arg(N(min))
+
 	builder.Arg(N(max))
 
 	return builder
@@ -96,8 +110,11 @@ func Clamp(v cog.Builder[Expr], min float64, max float64) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#clamp_max
 func ClampMax(v cog.Builder[Expr], max float64) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("clamp_max")
+
 	builder.Arg(v)
+
 	builder.Arg(N(max))
 
 	return builder
@@ -107,8 +124,11 @@ func ClampMax(v cog.Builder[Expr], max float64) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#clamp_min
 func ClampMin(v cog.Builder[Expr], min float64) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("clamp_min")
+
 	builder.Arg(v)
+
 	builder.Arg(N(min))
 
 	return builder
@@ -118,6 +138,7 @@ func ClampMin(v cog.Builder[Expr], min float64) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#day_of_month
 func DayOfMonth() *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("day_of_month")
 
 	return builder
@@ -127,7 +148,9 @@ func DayOfMonth() *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#day_of_month
 func DayOfMonthFor(v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("day_of_month")
+
 	builder.Arg(v)
 
 	return builder
@@ -137,6 +160,7 @@ func DayOfMonthFor(v cog.Builder[Expr]) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#day_of_week
 func DayOfWeek() *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("day_of_week")
 
 	return builder
@@ -146,7 +170,9 @@ func DayOfWeek() *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#day_of_week
 func DayOfWeekFor(v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("day_of_week")
+
 	builder.Arg(v)
 
 	return builder
@@ -156,6 +182,7 @@ func DayOfWeekFor(v cog.Builder[Expr]) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#day_of_year
 func DayOfYear() *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("day_of_year")
 
 	return builder
@@ -165,7 +192,9 @@ func DayOfYear() *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#day_of_year
 func DayOfYearFor(v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("day_of_year")
+
 	builder.Arg(v)
 
 	return builder
@@ -175,6 +204,7 @@ func DayOfYearFor(v cog.Builder[Expr]) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#days_in_month
 func DaysInMonth() *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("days_in_month")
 
 	return builder
@@ -184,7 +214,9 @@ func DaysInMonth() *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#days_in_month
 func DayInMonthFor(v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("days_in_month")
+
 	builder.Arg(v)
 
 	return builder
@@ -195,7 +227,9 @@ func DayInMonthFor(v cog.Builder[Expr]) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#delta
 func Delta(v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("delta")
+
 	builder.Arg(v)
 
 	return builder
@@ -207,7 +241,9 @@ func Delta(v cog.Builder[Expr]) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#deriv
 func Deriv(v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("deriv")
+
 	builder.Arg(v)
 
 	return builder
@@ -217,7 +253,9 @@ func Deriv(v cog.Builder[Expr]) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#exp
 func Exp(v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("exp")
+
 	builder.Arg(v)
 
 	return builder
@@ -227,7 +265,9 @@ func Exp(v cog.Builder[Expr]) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#floor
 func Floor(v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("floor")
+
 	builder.Arg(v)
 
 	return builder
@@ -238,7 +278,9 @@ func Floor(v cog.Builder[Expr]) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#histogram_avg
 func HistogramAvg(v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("histogram_avg")
+
 	builder.Arg(v)
 
 	return builder
@@ -249,7 +291,9 @@ func HistogramAvg(v cog.Builder[Expr]) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#histogram_count-and-histogram_sum
 func HistogramCount(v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("histogram_count")
+
 	builder.Arg(v)
 
 	return builder
@@ -260,7 +304,9 @@ func HistogramCount(v cog.Builder[Expr]) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#histogram_count-and-histogram_sum
 func HistogramSum(v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("histogram_sum")
+
 	builder.Arg(v)
 
 	return builder
@@ -271,9 +317,13 @@ func HistogramSum(v cog.Builder[Expr]) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#histogram_fraction
 func HistogramFraction(lower float64, upper float64, v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("histogram_fraction")
+
 	builder.Arg(N(lower))
+
 	builder.Arg(N(upper))
+
 	builder.Arg(v)
 
 	return builder
@@ -283,8 +333,11 @@ func HistogramFraction(lower float64, upper float64, v cog.Builder[Expr]) *FuncC
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#histogram_quantile
 func HistogramQuantile(phi float64, v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("histogram_quantile")
+
 	builder.Arg(N(phi))
+
 	builder.Arg(v)
 
 	return builder
@@ -296,7 +349,9 @@ func HistogramQuantile(phi float64, v cog.Builder[Expr]) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#histogram_stddev
 func HistogramStddev(v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("histogram_stddev")
+
 	builder.Arg(v)
 
 	return builder
@@ -308,7 +363,9 @@ func HistogramStddev(v cog.Builder[Expr]) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#histogram_stdvar
 func HistogramStdvar(v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("histogram_stdvar")
+
 	builder.Arg(v)
 
 	return builder
@@ -318,6 +375,7 @@ func HistogramStdvar(v cog.Builder[Expr]) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#hour
 func Hour() *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("hour")
 
 	return builder
@@ -327,7 +385,9 @@ func Hour() *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#hour
 func HourFor(v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("hour")
+
 	builder.Arg(v)
 
 	return builder
@@ -338,7 +398,9 @@ func HourFor(v cog.Builder[Expr]) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#idelta
 func Idelta(v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("idelta")
+
 	builder.Arg(v)
 
 	return builder
@@ -348,7 +410,9 @@ func Idelta(v cog.Builder[Expr]) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#increase
 func Increase(v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("increase")
+
 	builder.Arg(v)
 
 	return builder
@@ -359,7 +423,9 @@ func Increase(v cog.Builder[Expr]) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#irate
 func Irate(v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("irate")
+
 	builder.Arg(v)
 
 	return builder
@@ -370,11 +436,17 @@ func Irate(v cog.Builder[Expr]) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#label_replace
 func LabelReplace(v cog.Builder[Expr], dstLabel string, replacement string, srcLabel string, regex string) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("label_replace")
+
 	builder.Arg(v)
+
 	builder.Arg(S(dstLabel))
+
 	builder.Arg(S(replacement))
+
 	builder.Arg(S(srcLabel))
+
 	builder.Arg(S(regex))
 
 	return builder
@@ -384,7 +456,9 @@ func LabelReplace(v cog.Builder[Expr], dstLabel string, replacement string, srcL
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#ln
 func Ln(v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("ln")
+
 	builder.Arg(v)
 
 	return builder
@@ -394,7 +468,9 @@ func Ln(v cog.Builder[Expr]) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#log2
 func Log2(v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("log2")
+
 	builder.Arg(v)
 
 	return builder
@@ -404,7 +480,9 @@ func Log2(v cog.Builder[Expr]) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#log10
 func Log10(v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("log10")
+
 	builder.Arg(v)
 
 	return builder
@@ -414,6 +492,7 @@ func Log10(v cog.Builder[Expr]) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#minute
 func Minute() *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("minute")
 
 	return builder
@@ -423,7 +502,9 @@ func Minute() *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#minute
 func MinuteFor(v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("minute")
+
 	builder.Arg(v)
 
 	return builder
@@ -433,6 +514,7 @@ func MinuteFor(v cog.Builder[Expr]) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#month
 func Month() *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("month")
 
 	return builder
@@ -442,7 +524,9 @@ func Month() *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#month
 func MonthFor(v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("month")
+
 	builder.Arg(v)
 
 	return builder
@@ -453,8 +537,11 @@ func MonthFor(v cog.Builder[Expr]) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#predict_linear
 func PredictLinear(v cog.Builder[Expr], t float64) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("predict_linear")
+
 	builder.Arg(v)
+
 	builder.Arg(N(t))
 
 	return builder
@@ -464,7 +551,9 @@ func PredictLinear(v cog.Builder[Expr], t float64) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#rate
 func Rate(v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("rate")
+
 	builder.Arg(v)
 
 	return builder
@@ -476,7 +565,9 @@ func Rate(v cog.Builder[Expr]) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#resets
 func Resets(v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("resets")
+
 	builder.Arg(v)
 
 	return builder
@@ -486,7 +577,9 @@ func Resets(v cog.Builder[Expr]) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#round
 func Round(v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("round")
+
 	builder.Arg(v)
 
 	return builder
@@ -497,8 +590,11 @@ func Round(v cog.Builder[Expr]) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#round
 func RoundTo(v cog.Builder[Expr], toNearest float64) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("round")
+
 	builder.Arg(v)
+
 	builder.Arg(N(toNearest))
 
 	return builder
@@ -509,7 +605,9 @@ func RoundTo(v cog.Builder[Expr], toNearest float64) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#scalar
 func Scalar(v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("scalar")
+
 	builder.Arg(v)
 
 	return builder
@@ -519,7 +617,9 @@ func Scalar(v cog.Builder[Expr]) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#sgn
 func Sgn(v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("sgn")
+
 	builder.Arg(v)
 
 	return builder
@@ -530,7 +630,9 @@ func Sgn(v cog.Builder[Expr]) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#sort
 func Sort(v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("sort")
+
 	builder.Arg(v)
 
 	return builder
@@ -541,7 +643,9 @@ func Sort(v cog.Builder[Expr]) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#sort_desc
 func SortDesc(v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("sort_desc")
+
 	builder.Arg(v)
 
 	return builder
@@ -551,7 +655,9 @@ func SortDesc(v cog.Builder[Expr]) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#sqrt
 func Sqrt(v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("sqrt")
+
 	builder.Arg(v)
 
 	return builder
@@ -561,6 +667,7 @@ func Sqrt(v cog.Builder[Expr]) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#time
 func Time() *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("time")
 
 	return builder
@@ -570,7 +677,9 @@ func Time() *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#timestamp
 func Timestamp(v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("timestamp")
+
 	builder.Arg(v)
 
 	return builder
@@ -580,7 +689,9 @@ func Timestamp(v cog.Builder[Expr]) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#vector
 func Vect(s float64) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("vector")
+
 	builder.Arg(N(s))
 
 	return builder
@@ -590,6 +701,7 @@ func Vect(s float64) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#year
 func Year() *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("year")
 
 	return builder
@@ -599,7 +711,9 @@ func Year() *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#year
 func YearFor(v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("year")
+
 	builder.Arg(v)
 
 	return builder
@@ -609,7 +723,9 @@ func YearFor(v cog.Builder[Expr]) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#aggregation_over_time
 func AvgOverTime(v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("avg_over_time")
+
 	builder.Arg(v)
 
 	return builder
@@ -619,7 +735,9 @@ func AvgOverTime(v cog.Builder[Expr]) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#aggregation_over_time
 func MinOverTime(v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("min_over_time")
+
 	builder.Arg(v)
 
 	return builder
@@ -629,7 +747,9 @@ func MinOverTime(v cog.Builder[Expr]) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#aggregation_over_time
 func MaxOverTime(v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("max_over_time")
+
 	builder.Arg(v)
 
 	return builder
@@ -639,7 +759,9 @@ func MaxOverTime(v cog.Builder[Expr]) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#aggregation_over_time
 func SumOverTime(v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("sum_over_time")
+
 	builder.Arg(v)
 
 	return builder
@@ -649,7 +771,9 @@ func SumOverTime(v cog.Builder[Expr]) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#aggregation_over_time
 func CountOverTime(v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("count_over_time")
+
 	builder.Arg(v)
 
 	return builder
@@ -659,8 +783,11 @@ func CountOverTime(v cog.Builder[Expr]) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#aggregation_over_time
 func QuantileOverTime(phi float64, v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("quantile_over_time")
+
 	builder.Arg(N(phi))
+
 	builder.Arg(v)
 
 	return builder
@@ -670,7 +797,9 @@ func QuantileOverTime(phi float64, v cog.Builder[Expr]) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#aggregation_over_time
 func StddevOverTime(v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("stddev_over_time")
+
 	builder.Arg(v)
 
 	return builder
@@ -680,7 +809,9 @@ func StddevOverTime(v cog.Builder[Expr]) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#aggregation_over_time
 func StdvarOverTime(v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("stdvar_over_time")
+
 	builder.Arg(v)
 
 	return builder
@@ -690,7 +821,9 @@ func StdvarOverTime(v cog.Builder[Expr]) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#aggregation_over_time
 func LastOverTime(v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("last_over_time")
+
 	builder.Arg(v)
 
 	return builder
@@ -700,7 +833,9 @@ func LastOverTime(v cog.Builder[Expr]) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#aggregation_over_time
 func PresentOverTime(v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("present_over_time")
+
 	builder.Arg(v)
 
 	return builder
@@ -710,7 +845,9 @@ func PresentOverTime(v cog.Builder[Expr]) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#trigonometric-functions
 func Acos(v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("acos")
+
 	builder.Arg(v)
 
 	return builder
@@ -720,7 +857,9 @@ func Acos(v cog.Builder[Expr]) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#trigonometric-functions
 func Acosh(v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("acosh")
+
 	builder.Arg(v)
 
 	return builder
@@ -730,7 +869,9 @@ func Acosh(v cog.Builder[Expr]) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#trigonometric-functions
 func Asin(v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("asin")
+
 	builder.Arg(v)
 
 	return builder
@@ -740,7 +881,9 @@ func Asin(v cog.Builder[Expr]) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#trigonometric-functions
 func Asinh(v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("asinh")
+
 	builder.Arg(v)
 
 	return builder
@@ -750,7 +893,9 @@ func Asinh(v cog.Builder[Expr]) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#trigonometric-functions
 func Atan(v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("atan")
+
 	builder.Arg(v)
 
 	return builder
@@ -760,7 +905,9 @@ func Atan(v cog.Builder[Expr]) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#trigonometric-functions
 func Atanh(v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("atanh")
+
 	builder.Arg(v)
 
 	return builder
@@ -770,7 +917,9 @@ func Atanh(v cog.Builder[Expr]) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#trigonometric-functions
 func Cos(v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("cos")
+
 	builder.Arg(v)
 
 	return builder
@@ -780,7 +929,9 @@ func Cos(v cog.Builder[Expr]) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#trigonometric-functions
 func Cosh(v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("cosh")
+
 	builder.Arg(v)
 
 	return builder
@@ -790,7 +941,9 @@ func Cosh(v cog.Builder[Expr]) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#trigonometric-functions
 func Sin(v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("sin")
+
 	builder.Arg(v)
 
 	return builder
@@ -800,7 +953,9 @@ func Sin(v cog.Builder[Expr]) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#trigonometric-functions
 func Sinh(v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("sinh")
+
 	builder.Arg(v)
 
 	return builder
@@ -810,7 +965,9 @@ func Sinh(v cog.Builder[Expr]) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#trigonometric-functions
 func Tan(v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("tan")
+
 	builder.Arg(v)
 
 	return builder
@@ -820,7 +977,9 @@ func Tan(v cog.Builder[Expr]) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#trigonometric-functions
 func Tanh(v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("tanh")
+
 	builder.Arg(v)
 
 	return builder
@@ -830,7 +989,9 @@ func Tanh(v cog.Builder[Expr]) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#trigonometric-functions
 func Deg(v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("deg")
+
 	builder.Arg(v)
 
 	return builder
@@ -840,6 +1001,7 @@ func Deg(v cog.Builder[Expr]) *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#trigonometric-functions
 func Pi() *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("pi")
 
 	return builder
@@ -849,7 +1011,9 @@ func Pi() *FuncCallExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#trigonometric-functions
 func Rad(v cog.Builder[Expr]) *FuncCallExprBuilder {
 	builder := NewFuncCallExprBuilder()
+
 	builder.Function("rad")
+
 	builder.Arg(v)
 
 	return builder
@@ -860,7 +1024,16 @@ func (builder *FuncCallExprBuilder) Build() (Expr, error) {
 		return Expr{}, err
 	}
 
+	if len(builder.errors) > 0 {
+		return Expr{}, cog.MakeBuildErrors("promql.funcCallExpr", builder.errors)
+	}
+
 	return *builder.internal, nil
+}
+
+func (builder *FuncCallExprBuilder) RecordError(path string, err error) *FuncCallExprBuilder {
+	builder.errors = append(builder.errors, cog.MakeBuildErrors(path, err)...)
+	return builder
 }
 
 func (builder FuncCallExprBuilder) String() string {
@@ -886,7 +1059,7 @@ func (builder *FuncCallExprBuilder) Args(args []cog.Builder[Expr]) *FuncCallExpr
 	for _, r1 := range args {
 		argsDepth1, err := r1.Build()
 		if err != nil {
-			builder.errors["FuncCallExpr.args"] = err.(cog.BuildErrors)
+			builder.errors = append(builder.errors, err.(cog.BuildErrors)...)
 			return builder
 		}
 		argsResources = append(argsResources, argsDepth1)
@@ -903,7 +1076,7 @@ func (builder *FuncCallExprBuilder) Arg(arg cog.Builder[Expr]) *FuncCallExprBuil
 	}
 	argResource, err := arg.Build()
 	if err != nil {
-		builder.errors["FuncCallExpr.args"] = err.(cog.BuildErrors)
+		builder.errors = append(builder.errors, err.(cog.BuildErrors)...)
 		return builder
 	}
 	builder.internal.FuncCallExpr.Args = append(builder.internal.FuncCallExpr.Args, argResource)

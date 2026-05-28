@@ -29,34 +29,6 @@
  * <span class="badge builder"></span> [VectorExprBuilder](./builder-VectorExprBuilder.md)
 ## Functions
 
-### <span class="badge function"></span> n
-
-Shortcut to turn a number into a NumberLiteralExpr expression.
-
-```typescript
-n(value: number)
-```
-
-### <span class="badge function"></span> s
-
-Shortcut to turn a string into a StringLiteralExpr expression.
-
-```typescript
-s(value: string)
-```
-
-### <span class="badge function"></span> subquery
-
-Creates a subquery.
-
-Subquery allows you to run an instant query for a given range and resolution. The result of a subquery is a range vector.
-
-See https://prometheus.io/docs/prometheus/latest/querying/basics/#subquery
-
-```typescript
-subquery(expression: cog.Builder<promql.Expr>)
-```
-
 ### <span class="badge function"></span> sum
 
 Calculate sum over dimensions.
@@ -195,16 +167,6 @@ See https://prometheus.io/docs/prometheus/latest/querying/operators/#aggregation
 
 ```typescript
 limitRatio(k: number, vector: cog.Builder<promql.Expr>)
-```
-
-### <span class="badge function"></span> vector
-
-Returns the scalar s as a vector with no labels.
-
-See https://prometheus.io/docs/prometheus/latest/querying/functions/#vector
-
-```typescript
-vector(s: string)
 ```
 
 ### <span class="badge function"></span> add
@@ -369,22 +331,6 @@ See https://prometheus.io/docs/prometheus/latest/querying/operators/#trigonometr
 
 ```typescript
 atan2(left: cog.Builder<promql.Expr>, right: cog.Builder<promql.Expr>)
-```
-
-### <span class="badge function"></span> neg
-
-Negation unary operator.
-
-```typescript
-neg(expr: cog.Builder<promql.Expr>)
-```
-
-### <span class="badge function"></span> id
-
-Identity unary operator.
-
-```typescript
-id(expr: cog.Builder<promql.Expr>)
 ```
 
 ### <span class="badge function"></span> abs
@@ -1231,5 +1177,83 @@ See https://prometheus.io/docs/prometheus/latest/querying/functions/#trigonometr
 
 ```typescript
 rad(v: cog.Builder<promql.Expr>)
+```
+
+### <span class="badge function"></span> labelEq
+
+```typescript
+labelEq(name: string, value: string)
+```
+
+### <span class="badge function"></span> labelNeq
+
+```typescript
+labelNeq(name: string, value: string)
+```
+
+### <span class="badge function"></span> labelMatchRegexp
+
+```typescript
+labelMatchRegexp(name: string, value: string)
+```
+
+### <span class="badge function"></span> labelNotMatchRegexp
+
+```typescript
+labelNotMatchRegexp(name: string, value: string)
+```
+
+### <span class="badge function"></span> subquery
+
+Creates a subquery.
+
+Subquery allows you to run an instant query for a given range and resolution. The result of a subquery is a range vector.
+
+See https://prometheus.io/docs/prometheus/latest/querying/basics/#subquery
+
+```typescript
+subquery(expression: cog.Builder<promql.Expr>)
+```
+
+### <span class="badge function"></span> neg
+
+Negation unary operator.
+
+```typescript
+neg(expr: cog.Builder<promql.Expr>)
+```
+
+### <span class="badge function"></span> id
+
+Identity unary operator.
+
+```typescript
+id(expr: cog.Builder<promql.Expr>)
+```
+
+### <span class="badge function"></span> vector
+
+Returns the scalar s as a vector with no labels.
+
+See https://prometheus.io/docs/prometheus/latest/querying/functions/#vector
+
+```typescript
+vector(s: string)
+```
+
+### <span class="badge function"></span> s
+
+Shortcut to turn a string into a StringLiteralExpr expression.
+
+```typescript
+s(value: string)
+```
+
+### <span class="badge function"></span> n
+
+Shortcut to turn a number into a NumberLiteralExpr expression.
+
+```typescript
+n(value: number)
 ```
 

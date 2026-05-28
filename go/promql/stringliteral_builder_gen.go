@@ -11,14 +11,14 @@ var _ cog.Builder[Expr] = (*StringLiteralBuilder)(nil)
 // Represents a PromQL expression.
 type StringLiteralBuilder struct {
 	internal *Expr
-	errors   map[string]cog.BuildErrors
+	errors   cog.BuildErrors
 }
 
 func NewStringLiteralBuilder() *StringLiteralBuilder {
 	resource := NewExpr()
 	builder := &StringLiteralBuilder{
 		internal: resource,
-		errors:   make(map[string]cog.BuildErrors),
+		errors:   make(cog.BuildErrors, 0),
 	}
 	if builder.internal.StringLiteralExpr == nil {
 		builder.internal.StringLiteralExpr = NewStringLiteralExpr()
@@ -31,6 +31,7 @@ func NewStringLiteralBuilder() *StringLiteralBuilder {
 // Shortcut to turn a string into a StringLiteral expression.
 func S(value string) *StringLiteralBuilder {
 	builder := NewStringLiteralBuilder()
+
 	builder.Value(value)
 
 	return builder
@@ -41,7 +42,16 @@ func (builder *StringLiteralBuilder) Build() (Expr, error) {
 		return Expr{}, err
 	}
 
+	if len(builder.errors) > 0 {
+		return Expr{}, cog.MakeBuildErrors("promql.stringLiteral", builder.errors)
+	}
+
 	return *builder.internal, nil
+}
+
+func (builder *StringLiteralBuilder) RecordError(path string, err error) *StringLiteralBuilder {
+	builder.errors = append(builder.errors, cog.MakeBuildErrors(path, err)...)
+	return builder
 }
 
 func (builder StringLiteralBuilder) String() string {

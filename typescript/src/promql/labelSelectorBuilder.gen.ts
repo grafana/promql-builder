@@ -43,3 +43,39 @@ export class LabelSelectorBuilder implements cog.Builder<promql.LabelSelector> {
     }
 }
 
+export function labelEq(name: string,value: string): LabelSelectorBuilder {
+	const builder = new LabelSelectorBuilder();
+	builder.name(name);
+	builder.value(value);
+	builder.operator("=");
+
+	return builder;
+}
+
+export function labelNeq(name: string,value: string): LabelSelectorBuilder {
+	const builder = new LabelSelectorBuilder();
+	builder.name(name);
+	builder.value(value);
+	builder.operator("!=");
+
+	return builder;
+}
+
+export function labelMatchRegexp(name: string,value: string): LabelSelectorBuilder {
+	const builder = new LabelSelectorBuilder();
+	builder.name(name);
+	builder.value(value);
+	builder.operator("=~");
+
+	return builder;
+}
+
+export function labelNotMatchRegexp(name: string,value: string): LabelSelectorBuilder {
+	const builder = new LabelSelectorBuilder();
+	builder.name(name);
+	builder.value(value);
+	builder.operator("!~");
+
+	return builder;
+}
+

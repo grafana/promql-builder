@@ -15,8 +15,8 @@ defaults:
     shell: bash
 
 jobs:
-  validate_cog_config:
-    name: Validate cog config
+  run_codegen:
+    name: Run codegen pipeline
     runs-on: ubuntu-latest
 
     steps:
@@ -24,9 +24,24 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Validate cog's config
+      - name: Install devbox
+        uses: jetify-com/devbox-install-action@8c6a66ed6273138b1915457069de78cb52fe3bd7 # v0.15.0
+        with:
+          enable-cache: 'true'
+          devbox-version: ${{ env.DEVBOX_VERSION }}
+
+      - name: Run codegen pipeline
         run: |
-          make validate-config
+          git config --global user.email "cog-ci@grafana.com"
+          git config --global user.name "cog - CI"
+
+          make prepare-release
+        env:
+          TERM: 'xterm'
+          WORKSPACE_PATH: /tmp/promql-builder-current
+          LOG_LEVEL: '7' # debug
+          GOGC: 'off'
+          SKIP_VALIDATION: 'no'
 
   diff_preview:
     name: Generate diff

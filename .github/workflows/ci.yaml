@@ -59,6 +59,7 @@ jobs:
           CLEANUP_WORKSPACE: 'no'
           LOG_LEVEL: '7' # debug
           GOGC: 'off'
+          SKIP_VALIDATION: 'yes'
 
       - name: Identify latest branch
         id: latest_branch

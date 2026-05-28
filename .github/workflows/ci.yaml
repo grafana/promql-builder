@@ -52,9 +52,7 @@ jobs:
           git config --global user.email "cog-ci@grafana.com"
           git config --global user.name "cog - CI"
 
-          make release
-
-          mv /tmp/promql-builder-current/promql-builder ./promql-builder-current
+          make prepare-release
         env:
           TERM: 'xterm'
           WORKSPACE_PATH: /tmp/promql-builder-current
@@ -62,11 +60,15 @@ jobs:
           LOG_LEVEL: '7' # debug
           GOGC: 'off'
 
-      - name: Checkout main branch
+      - name: Identify latest branch
+        id: latest_branch
+        run: |
+          echo "ref=$(./scripts/release-preview-or-main.sh)" >> $GITHUB_OUTPUT
+
+      - name: Checkout ${{ steps.latest_branch.outputs.ref }} branch
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
-          ref: main
-          path: promql-builder-main
+          ref: ${{ steps.latest_branch.outputs.ref }}
           persist-credentials: false
 
       - name: Generate diff
@@ -78,11 +80,18 @@ jobs:
             --unified \
             --recursive \
             --exclude='.git' \
+            --exclude='.cog' \
+            --exclude='typescript/dist' \
+            --exclude='python/.mypy_cache' \
+            --exclude='scripts*' \
             --exclude='gradle.properties' \
             --exclude='pyproject.toml' \
             --exclude='package.json' \
+            --exclude='yarn.lock' \
             --exclude='*.md' \
-            ./promql-builder-main ./promql-builder-current >> diff.patch || true # diff returns 1 if the two targets have differences
+            --exclude='diff.patch' \
+            --exclude='.release' \
+            ./ /tmp/promql-builder-current/promql-builder >> diff.patch || true # diff returns 1 if the two targets have differences
 
       - name: Upload diff as artifact
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1

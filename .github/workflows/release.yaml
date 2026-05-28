@@ -1,21 +1,8 @@
 name: Release
 on:
-  workflow_dispatch:
-    inputs:
-      version:
-        description: 'Version to release (x.y.z)'
-        required: true
-        type: string
-      dryRun:
-        description: 'Dry-run mode runs the release pipeline without pushing its results.'
-        required: false
-        default: false
-        type: boolean
-      skipValidation:
-        description: 'Skip output validation (linters, compilation checks, ...).'
-        required: false
-        default: false
-        type: boolean
+  push:
+    branches: ["main"]
+  workflow_dispatch: ~
 
 env:
   DEVBOX_VERSION: '0.17.2'
@@ -42,6 +29,9 @@ jobs:
     permissions:
       contents: write # the codegen pipeline commits + creates a tag + pushes back to origin
 
+    outputs:
+      is_release: ${{ steps.release.outputs.is_release }}
+
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
@@ -53,7 +43,22 @@ jobs:
           enable-cache: 'true'
           devbox-version: ${{ env.DEVBOX_VERSION }}
 
-      - name: Run the release script
+      - name: Prepare a release
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git config --global url."https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/".insteadOf "git@github.com:"
+
+          make prepare-release
+        env:
+          TERM: 'xterm'
+          LOG_LEVEL: '7' # debug
+          DRY_RUN: 'no'
+          SKIP_VALIDATION: 'no'
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }} # to be used by `gh`
+
+      - name: Release
+        id: release
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
@@ -63,9 +68,7 @@ jobs:
         env:
           TERM: 'xterm'
           LOG_LEVEL: '7' # debug
-          DRY_RUN: ${{ inputs.dryRun == true && 'yes' || 'no' }}
-          SKIP_VALIDATION: ${{ inputs.skipValidation == true && 'yes' || 'no' }}
-          VERSION: ${{ inputs.version }}
+          DRY_RUN: 'no'
 
   build_docs:
     needs: codegen
@@ -99,7 +102,7 @@ jobs:
 
       - name: Upload static files as artifact
         id: deployment
-        if: ${{ ! inputs.dryRun }}
+        if: ${{ needs.codegen.outputs.is_release == 'yes' }}
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
           path: ./build/docs/site
@@ -112,7 +115,7 @@ jobs:
       pages: write      # to deploy to Pages
       id-token: write   # to verify the deployment originates from an appropriate source
 
-    if: ${{ ! inputs.dryRun }}
+    if: ${{ needs.codegen.outputs.is_release == 'yes' }}
 
     environment:
       name: github-pages
@@ -151,7 +154,7 @@ jobs:
         run: devbox run ./scripts/build-python-wheel.sh
 
       - name: Publish distribution 📦 to PyPI
-        if: ${{ ! inputs.dryRun }}
+        if: ${{ needs.codegen.outputs.is_release == 'yes' }}
         uses: pypa/gh-action-pypi-publish@cef221092ed1bacb1cc03d23a2d87d1d172e277b # v1.14.0
         with:
           packages-dir: python/dist/
@@ -196,5 +199,5 @@ jobs:
         run: npm run build
 
       - name: Publish to NPM registry
-        if: ${{ ! inputs.dryRun }}
+        if: ${{ needs.codegen.outputs.is_release == 'yes' }}
         run: npm publish

@@ -29,34 +29,6 @@
  * <span class="badge builder"></span> [VectorExpr](./builder-VectorExpr.md)
 ## Functions
 
-### <span class="badge function"></span> n
-
-Shortcut to turn a number into a NumberLiteralExpr expression.
-
-```python
-def n(value: float) -> NumberLiteralExpr
-```
-
-### <span class="badge function"></span> s
-
-Shortcut to turn a string into a StringLiteralExpr expression.
-
-```python
-def s(value: str) -> StringLiteralExpr
-```
-
-### <span class="badge function"></span> subquery
-
-Creates a subquery.
-
-Subquery allows you to run an instant query for a given range and resolution. The result of a subquery is a range vector.
-
-See https://prometheus.io/docs/prometheus/latest/querying/basics/#subquery
-
-```python
-def subquery(expression: cogbuilder.Builder[promql.Expr]) -> SubqueryExpr
-```
-
 ### <span class="badge function"></span> sum
 
 Calculate sum over dimensions.
@@ -195,16 +167,6 @@ See https://prometheus.io/docs/prometheus/latest/querying/operators/#aggregation
 
 ```python
 def limit_ratio(k: float, vector: cogbuilder.Builder[promql.Expr]) -> AggregationExpr
-```
-
-### <span class="badge function"></span> vector
-
-Returns the scalar s as a vector with no labels.
-
-See https://prometheus.io/docs/prometheus/latest/querying/functions/#vector
-
-```python
-def vector(s: str) -> VectorExpr
 ```
 
 ### <span class="badge function"></span> add
@@ -369,22 +331,6 @@ See https://prometheus.io/docs/prometheus/latest/querying/operators/#trigonometr
 
 ```python
 def atan2(left: cogbuilder.Builder[promql.Expr], right: cogbuilder.Builder[promql.Expr]) -> BinaryExpr
-```
-
-### <span class="badge function"></span> neg
-
-Negation unary operator.
-
-```python
-def neg(expr: cogbuilder.Builder[promql.Expr]) -> UnaryExpr
-```
-
-### <span class="badge function"></span> id
-
-Identity unary operator.
-
-```python
-def id(expr: cogbuilder.Builder[promql.Expr]) -> UnaryExpr
 ```
 
 ### <span class="badge function"></span> abs
@@ -1231,5 +1177,83 @@ See https://prometheus.io/docs/prometheus/latest/querying/functions/#trigonometr
 
 ```python
 def rad(v: cogbuilder.Builder[promql.Expr]) -> FuncCallExpr
+```
+
+### <span class="badge function"></span> label_eq
+
+```python
+def label_eq(name: str, value: str) -> LabelSelector
+```
+
+### <span class="badge function"></span> label_neq
+
+```python
+def label_neq(name: str, value: str) -> LabelSelector
+```
+
+### <span class="badge function"></span> label_match_regexp
+
+```python
+def label_match_regexp(name: str, value: str) -> LabelSelector
+```
+
+### <span class="badge function"></span> label_not_match_regexp
+
+```python
+def label_not_match_regexp(name: str, value: str) -> LabelSelector
+```
+
+### <span class="badge function"></span> subquery
+
+Creates a subquery.
+
+Subquery allows you to run an instant query for a given range and resolution. The result of a subquery is a range vector.
+
+See https://prometheus.io/docs/prometheus/latest/querying/basics/#subquery
+
+```python
+def subquery(expression: cogbuilder.Builder[promql.Expr]) -> SubqueryExpr
+```
+
+### <span class="badge function"></span> neg
+
+Negation unary operator.
+
+```python
+def neg(expr: cogbuilder.Builder[promql.Expr]) -> UnaryExpr
+```
+
+### <span class="badge function"></span> id
+
+Identity unary operator.
+
+```python
+def id(expr: cogbuilder.Builder[promql.Expr]) -> UnaryExpr
+```
+
+### <span class="badge function"></span> vector
+
+Returns the scalar s as a vector with no labels.
+
+See https://prometheus.io/docs/prometheus/latest/querying/functions/#vector
+
+```python
+def vector(s: str) -> VectorExpr
+```
+
+### <span class="badge function"></span> s
+
+Shortcut to turn a string into a StringLiteralExpr expression.
+
+```python
+def s(value: str) -> StringLiteralExpr
+```
+
+### <span class="badge function"></span> n
+
+Shortcut to turn a number into a NumberLiteralExpr expression.
+
+```python
+def n(value: float) -> NumberLiteralExpr
 ```
 

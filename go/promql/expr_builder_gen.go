@@ -11,14 +11,14 @@ var _ cog.Builder[Expr] = (*ExprBuilder)(nil)
 // Represents a PromQL expression.
 type ExprBuilder struct {
 	internal *Expr
-	errors   map[string]cog.BuildErrors
+	errors   cog.BuildErrors
 }
 
 func NewExprBuilder() *ExprBuilder {
 	resource := NewExpr()
 	builder := &ExprBuilder{
 		internal: resource,
-		errors:   make(map[string]cog.BuildErrors),
+		errors:   make(cog.BuildErrors, 0),
 	}
 
 	return builder
@@ -29,7 +29,16 @@ func (builder *ExprBuilder) Build() (Expr, error) {
 		return Expr{}, err
 	}
 
+	if len(builder.errors) > 0 {
+		return Expr{}, cog.MakeBuildErrors("promql.expr", builder.errors)
+	}
+
 	return *builder.internal, nil
+}
+
+func (builder *ExprBuilder) RecordError(path string, err error) *ExprBuilder {
+	builder.errors = append(builder.errors, cog.MakeBuildErrors(path, err)...)
+	return builder
 }
 
 func (builder *ExprBuilder) NumberLiteralExpr(numberLiteralExpr NumberLiteralExpr) *ExprBuilder {

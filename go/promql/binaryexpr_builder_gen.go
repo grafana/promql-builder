@@ -11,14 +11,14 @@ var _ cog.Builder[Expr] = (*BinaryExprBuilder)(nil)
 // Represents a PromQL expression.
 type BinaryExprBuilder struct {
 	internal *Expr
-	errors   map[string]cog.BuildErrors
+	errors   cog.BuildErrors
 }
 
 func NewBinaryExprBuilder() *BinaryExprBuilder {
 	resource := NewExpr()
 	builder := &BinaryExprBuilder{
 		internal: resource,
-		errors:   make(map[string]cog.BuildErrors),
+		errors:   make(cog.BuildErrors, 0),
 	}
 	if builder.internal.BinaryExpr == nil {
 		builder.internal.BinaryExpr = NewBinaryExpr()
@@ -32,8 +32,11 @@ func NewBinaryExprBuilder() *BinaryExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/operators/#arithmetic-binary-operators
 func Add(left cog.Builder[Expr], right cog.Builder[Expr]) *BinaryExprBuilder {
 	builder := NewBinaryExprBuilder()
+
 	builder.Op(BinaryOpAdd)
+
 	builder.Left(left)
+
 	builder.Right(right)
 
 	return builder
@@ -43,8 +46,11 @@ func Add(left cog.Builder[Expr], right cog.Builder[Expr]) *BinaryExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/operators/#arithmetic-binary-operators
 func Sub(left cog.Builder[Expr], right cog.Builder[Expr]) *BinaryExprBuilder {
 	builder := NewBinaryExprBuilder()
+
 	builder.Op(BinaryOpSub)
+
 	builder.Left(left)
+
 	builder.Right(right)
 
 	return builder
@@ -54,8 +60,11 @@ func Sub(left cog.Builder[Expr], right cog.Builder[Expr]) *BinaryExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/operators/#arithmetic-binary-operators
 func Mul(left cog.Builder[Expr], right cog.Builder[Expr]) *BinaryExprBuilder {
 	builder := NewBinaryExprBuilder()
+
 	builder.Op(BinaryOpMul)
+
 	builder.Left(left)
+
 	builder.Right(right)
 
 	return builder
@@ -65,8 +74,11 @@ func Mul(left cog.Builder[Expr], right cog.Builder[Expr]) *BinaryExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/operators/#arithmetic-binary-operators
 func Div(left cog.Builder[Expr], right cog.Builder[Expr]) *BinaryExprBuilder {
 	builder := NewBinaryExprBuilder()
+
 	builder.Op(BinaryOpDiv)
+
 	builder.Left(left)
+
 	builder.Right(right)
 
 	return builder
@@ -76,8 +88,11 @@ func Div(left cog.Builder[Expr], right cog.Builder[Expr]) *BinaryExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/operators/#arithmetic-binary-operators
 func Mod(left cog.Builder[Expr], right cog.Builder[Expr]) *BinaryExprBuilder {
 	builder := NewBinaryExprBuilder()
+
 	builder.Op(BinaryOpMod)
+
 	builder.Left(left)
+
 	builder.Right(right)
 
 	return builder
@@ -87,8 +102,11 @@ func Mod(left cog.Builder[Expr], right cog.Builder[Expr]) *BinaryExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/operators/#arithmetic-binary-operators
 func Pow(left cog.Builder[Expr], right cog.Builder[Expr]) *BinaryExprBuilder {
 	builder := NewBinaryExprBuilder()
+
 	builder.Op(BinaryOpPow)
+
 	builder.Left(left)
+
 	builder.Right(right)
 
 	return builder
@@ -98,8 +116,11 @@ func Pow(left cog.Builder[Expr], right cog.Builder[Expr]) *BinaryExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/operators/#comparison-binary-operators
 func Eq(left cog.Builder[Expr], right cog.Builder[Expr]) *BinaryExprBuilder {
 	builder := NewBinaryExprBuilder()
+
 	builder.Op(BinaryOpEql)
+
 	builder.Left(left)
+
 	builder.Right(right)
 
 	return builder
@@ -109,8 +130,11 @@ func Eq(left cog.Builder[Expr], right cog.Builder[Expr]) *BinaryExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/operators/#comparison-binary-operators
 func Neq(left cog.Builder[Expr], right cog.Builder[Expr]) *BinaryExprBuilder {
 	builder := NewBinaryExprBuilder()
+
 	builder.Op(BinaryOpNeq)
+
 	builder.Left(left)
+
 	builder.Right(right)
 
 	return builder
@@ -120,8 +144,11 @@ func Neq(left cog.Builder[Expr], right cog.Builder[Expr]) *BinaryExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/operators/#comparison-binary-operators
 func Gt(left cog.Builder[Expr], right cog.Builder[Expr]) *BinaryExprBuilder {
 	builder := NewBinaryExprBuilder()
+
 	builder.Op(BinaryOpGtr)
+
 	builder.Left(left)
+
 	builder.Right(right)
 
 	return builder
@@ -131,8 +158,11 @@ func Gt(left cog.Builder[Expr], right cog.Builder[Expr]) *BinaryExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/operators/#comparison-binary-operators
 func Lt(left cog.Builder[Expr], right cog.Builder[Expr]) *BinaryExprBuilder {
 	builder := NewBinaryExprBuilder()
+
 	builder.Op(BinaryOpLss)
+
 	builder.Left(left)
+
 	builder.Right(right)
 
 	return builder
@@ -142,8 +172,11 @@ func Lt(left cog.Builder[Expr], right cog.Builder[Expr]) *BinaryExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/operators/#comparison-binary-operators
 func Gte(left cog.Builder[Expr], right cog.Builder[Expr]) *BinaryExprBuilder {
 	builder := NewBinaryExprBuilder()
+
 	builder.Op(BinaryOpGte)
+
 	builder.Left(left)
+
 	builder.Right(right)
 
 	return builder
@@ -153,8 +186,11 @@ func Gte(left cog.Builder[Expr], right cog.Builder[Expr]) *BinaryExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/operators/#comparison-binary-operators
 func Lte(left cog.Builder[Expr], right cog.Builder[Expr]) *BinaryExprBuilder {
 	builder := NewBinaryExprBuilder()
+
 	builder.Op(BinaryOpLte)
+
 	builder.Left(left)
+
 	builder.Right(right)
 
 	return builder
@@ -164,8 +200,11 @@ func Lte(left cog.Builder[Expr], right cog.Builder[Expr]) *BinaryExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/operators/#logical-set-binary-operators
 func And(left cog.Builder[Expr], right cog.Builder[Expr]) *BinaryExprBuilder {
 	builder := NewBinaryExprBuilder()
+
 	builder.Op(BinaryOpAnd)
+
 	builder.Left(left)
+
 	builder.Right(right)
 
 	return builder
@@ -175,8 +214,11 @@ func And(left cog.Builder[Expr], right cog.Builder[Expr]) *BinaryExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/operators/#logical-set-binary-operators
 func Or(left cog.Builder[Expr], right cog.Builder[Expr]) *BinaryExprBuilder {
 	builder := NewBinaryExprBuilder()
+
 	builder.Op(BinaryOpOr)
+
 	builder.Left(left)
+
 	builder.Right(right)
 
 	return builder
@@ -186,8 +228,11 @@ func Or(left cog.Builder[Expr], right cog.Builder[Expr]) *BinaryExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/operators/#logical-set-binary-operators
 func Unless(left cog.Builder[Expr], right cog.Builder[Expr]) *BinaryExprBuilder {
 	builder := NewBinaryExprBuilder()
+
 	builder.Op(BinaryOpUnless)
+
 	builder.Left(left)
+
 	builder.Right(right)
 
 	return builder
@@ -199,8 +244,11 @@ func Unless(left cog.Builder[Expr], right cog.Builder[Expr]) *BinaryExprBuilder 
 // See https://prometheus.io/docs/prometheus/latest/querying/operators/#trigonometric-binary-operators
 func Atan2(left cog.Builder[Expr], right cog.Builder[Expr]) *BinaryExprBuilder {
 	builder := NewBinaryExprBuilder()
+
 	builder.Op(BinaryOpAtan2)
+
 	builder.Left(left)
+
 	builder.Right(right)
 
 	return builder
@@ -211,7 +259,16 @@ func (builder *BinaryExprBuilder) Build() (Expr, error) {
 		return Expr{}, err
 	}
 
+	if len(builder.errors) > 0 {
+		return Expr{}, cog.MakeBuildErrors("promql.binaryExpr", builder.errors)
+	}
+
 	return *builder.internal, nil
+}
+
+func (builder *BinaryExprBuilder) RecordError(path string, err error) *BinaryExprBuilder {
+	builder.errors = append(builder.errors, cog.MakeBuildErrors(path, err)...)
+	return builder
 }
 
 func (builder BinaryExprBuilder) String() string {
@@ -233,7 +290,7 @@ func (builder *BinaryExprBuilder) Left(left cog.Builder[Expr]) *BinaryExprBuilde
 	}
 	leftResource, err := left.Build()
 	if err != nil {
-		builder.errors["BinaryExpr.left"] = err.(cog.BuildErrors)
+		builder.errors = append(builder.errors, err.(cog.BuildErrors)...)
 		return builder
 	}
 	builder.internal.BinaryExpr.Left = leftResource
@@ -247,7 +304,7 @@ func (builder *BinaryExprBuilder) Right(right cog.Builder[Expr]) *BinaryExprBuil
 	}
 	rightResource, err := right.Build()
 	if err != nil {
-		builder.errors["BinaryExpr.right"] = err.(cog.BuildErrors)
+		builder.errors = append(builder.errors, err.(cog.BuildErrors)...)
 		return builder
 	}
 	builder.internal.BinaryExpr.Right = rightResource

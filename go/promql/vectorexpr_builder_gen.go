@@ -11,14 +11,14 @@ var _ cog.Builder[Expr] = (*VectorExprBuilder)(nil)
 // Represents a PromQL expression.
 type VectorExprBuilder struct {
 	internal *Expr
-	errors   map[string]cog.BuildErrors
+	errors   cog.BuildErrors
 }
 
 func NewVectorExprBuilder() *VectorExprBuilder {
 	resource := NewExpr()
 	builder := &VectorExprBuilder{
 		internal: resource,
-		errors:   make(map[string]cog.BuildErrors),
+		errors:   make(cog.BuildErrors, 0),
 	}
 	if builder.internal.VectorExpr == nil {
 		builder.internal.VectorExpr = NewVectorExpr()
@@ -32,6 +32,7 @@ func NewVectorExprBuilder() *VectorExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/functions/#vector
 func Vector(s string) *VectorExprBuilder {
 	builder := NewVectorExprBuilder()
+
 	builder.Metric(s)
 
 	return builder
@@ -42,7 +43,16 @@ func (builder *VectorExprBuilder) Build() (Expr, error) {
 		return Expr{}, err
 	}
 
+	if len(builder.errors) > 0 {
+		return Expr{}, cog.MakeBuildErrors("promql.vectorExpr", builder.errors)
+	}
+
 	return *builder.internal, nil
+}
+
+func (builder *VectorExprBuilder) RecordError(path string, err error) *VectorExprBuilder {
+	builder.errors = append(builder.errors, cog.MakeBuildErrors(path, err)...)
+	return builder
 }
 
 func (builder VectorExprBuilder) String() string {
@@ -68,7 +78,7 @@ func (builder *VectorExprBuilder) Labels(labels []cog.Builder[LabelSelector]) *V
 	for _, r1 := range labels {
 		labelsDepth1, err := r1.Build()
 		if err != nil {
-			builder.errors["VectorExpr.labels"] = err.(cog.BuildErrors)
+			builder.errors = append(builder.errors, err.(cog.BuildErrors)...)
 			return builder
 		}
 		labelsResources = append(labelsResources, labelsDepth1)

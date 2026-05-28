@@ -11,14 +11,14 @@ var _ cog.Builder[Expr] = (*SubqueryExprBuilder)(nil)
 // Represents a PromQL expression.
 type SubqueryExprBuilder struct {
 	internal *Expr
-	errors   map[string]cog.BuildErrors
+	errors   cog.BuildErrors
 }
 
 func NewSubqueryExprBuilder() *SubqueryExprBuilder {
 	resource := NewExpr()
 	builder := &SubqueryExprBuilder{
 		internal: resource,
-		errors:   make(map[string]cog.BuildErrors),
+		errors:   make(cog.BuildErrors, 0),
 	}
 	if builder.internal.SubqueryExpr == nil {
 		builder.internal.SubqueryExpr = NewSubqueryExpr()
@@ -33,6 +33,7 @@ func NewSubqueryExprBuilder() *SubqueryExprBuilder {
 // See https://prometheus.io/docs/prometheus/latest/querying/basics/#subquery
 func Subquery(expression cog.Builder[Expr]) *SubqueryExprBuilder {
 	builder := NewSubqueryExprBuilder()
+
 	builder.Expr(expression)
 
 	return builder
@@ -43,7 +44,16 @@ func (builder *SubqueryExprBuilder) Build() (Expr, error) {
 		return Expr{}, err
 	}
 
+	if len(builder.errors) > 0 {
+		return Expr{}, cog.MakeBuildErrors("promql.subqueryExpr", builder.errors)
+	}
+
 	return *builder.internal, nil
+}
+
+func (builder *SubqueryExprBuilder) RecordError(path string, err error) *SubqueryExprBuilder {
+	builder.errors = append(builder.errors, cog.MakeBuildErrors(path, err)...)
+	return builder
 }
 
 func (builder SubqueryExprBuilder) String() string {
@@ -56,7 +66,7 @@ func (builder *SubqueryExprBuilder) Expr(expr cog.Builder[Expr]) *SubqueryExprBu
 	}
 	exprResource, err := expr.Build()
 	if err != nil {
-		builder.errors["SubqueryExpr.expr"] = err.(cog.BuildErrors)
+		builder.errors = append(builder.errors, err.(cog.BuildErrors)...)
 		return builder
 	}
 	builder.internal.SubqueryExpr.Expr = exprResource

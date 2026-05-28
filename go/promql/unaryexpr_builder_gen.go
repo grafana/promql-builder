@@ -11,14 +11,14 @@ var _ cog.Builder[Expr] = (*UnaryExprBuilder)(nil)
 // Represents a PromQL expression.
 type UnaryExprBuilder struct {
 	internal *Expr
-	errors   map[string]cog.BuildErrors
+	errors   cog.BuildErrors
 }
 
 func NewUnaryExprBuilder() *UnaryExprBuilder {
 	resource := NewExpr()
 	builder := &UnaryExprBuilder{
 		internal: resource,
-		errors:   make(map[string]cog.BuildErrors),
+		errors:   make(cog.BuildErrors, 0),
 	}
 	if builder.internal.UnaryExpr == nil {
 		builder.internal.UnaryExpr = NewUnaryExpr()
@@ -31,7 +31,9 @@ func NewUnaryExprBuilder() *UnaryExprBuilder {
 // Negation unary operator.
 func Neg(expr cog.Builder[Expr]) *UnaryExprBuilder {
 	builder := NewUnaryExprBuilder()
+
 	builder.Op(UnaryOpMinus)
+
 	builder.Expr(expr)
 
 	return builder
@@ -40,7 +42,9 @@ func Neg(expr cog.Builder[Expr]) *UnaryExprBuilder {
 // Identity unary operator.
 func Id(expr cog.Builder[Expr]) *UnaryExprBuilder {
 	builder := NewUnaryExprBuilder()
+
 	builder.Op(UnaryOpPlus)
+
 	builder.Expr(expr)
 
 	return builder
@@ -51,7 +55,16 @@ func (builder *UnaryExprBuilder) Build() (Expr, error) {
 		return Expr{}, err
 	}
 
+	if len(builder.errors) > 0 {
+		return Expr{}, cog.MakeBuildErrors("promql.unaryExpr", builder.errors)
+	}
+
 	return *builder.internal, nil
+}
+
+func (builder *UnaryExprBuilder) RecordError(path string, err error) *UnaryExprBuilder {
+	builder.errors = append(builder.errors, cog.MakeBuildErrors(path, err)...)
+	return builder
 }
 
 func (builder UnaryExprBuilder) String() string {
@@ -73,7 +86,7 @@ func (builder *UnaryExprBuilder) Expr(expr cog.Builder[Expr]) *UnaryExprBuilder 
 	}
 	exprResource, err := expr.Build()
 	if err != nil {
-		builder.errors["UnaryExpr.expr"] = err.(cog.BuildErrors)
+		builder.errors = append(builder.errors, err.(cog.BuildErrors)...)
 		return builder
 	}
 	builder.internal.UnaryExpr.Expr = exprResource

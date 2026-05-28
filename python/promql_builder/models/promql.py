@@ -17,7 +17,7 @@ class NumberLiteralExpr:
     type_val: typing.Literal["numberLiteralExpr"]
     value: float
 
-    def __init__(self, value: float = 0):
+    def __init__(self, value: float = 0) -> None:
         self.type_val = "numberLiteralExpr"
         self.value = value
 
@@ -35,7 +35,7 @@ class StringLiteralExpr:
     type_val: typing.Literal["stringLiteralExpr"]
     value: str
 
-    def __init__(self, value: str = ""):
+    def __init__(self, value: str = "") -> None:
         self.type_val = "stringLiteralExpr"
         self.value = value
 
@@ -65,7 +65,7 @@ class SubqueryExpr:
     # Empty string for default resolution.
     resolution: typing.Optional[str]
 
-    def __init__(self, expr: typing.Optional['Expr'] = None, offset: str = "", at: str = "", range_val: str = "", resolution: typing.Optional[str] = None):
+    def __init__(self, expr: typing.Optional['Expr'] = None, offset: str = "", at: str = "", range_val: str = "", resolution: typing.Optional[str] = None) -> None:
         self.type_val = "subqueryExpr"
         self.expr = expr if expr is not None else NumberLiteralExpr()
         self.offset = offset
@@ -82,6 +82,8 @@ class SubqueryExpr:
     
             if self.resolution is not None:
                 buffer += ":"+self.resolution
+    
+            buffer += "]"
     
         if self.offset != "":
             buffer += " offset " + self.offset
@@ -107,7 +109,7 @@ class AggregationExpr:
     # List of labels to remove from the result vector, while all other labels are preserved in the output.
     without: list[str]
 
-    def __init__(self, op: typing.Optional['AggregationOp'] = None, expr: typing.Optional['Expr'] = None, param: typing.Optional['Expr'] = None, by: typing.Optional[list[str]] = None, without: typing.Optional[list[str]] = None):
+    def __init__(self, op: typing.Optional['AggregationOp'] = None, expr: typing.Optional['Expr'] = None, param: typing.Optional['Expr'] = None, by: typing.Optional[list[str]] = None, without: typing.Optional[list[str]] = None) -> None:
         self.type_val = "aggregationExpr"
         self.op = op if op is not None else AggregationOp.SUM
         self.expr = expr if expr is not None else NumberLiteralExpr()
@@ -178,7 +180,7 @@ class VectorExpr:
     # https://prometheus.io/docs/prometheus/latest/querying/basics/#range-vector-selectors
     range_val: str
 
-    def __init__(self, metric: str = "", labels: typing.Optional[list['LabelSelector']] = None, offset: str = "", at: str = "", range_val: str = ""):
+    def __init__(self, metric: str = "", labels: typing.Optional[list['LabelSelector']] = None, offset: str = "", at: str = "", range_val: str = "") -> None:
         self.type_val = "vectorExpr"
         self.metric = metric
         self.labels = labels if labels is not None else []
@@ -213,7 +215,7 @@ class LabelSelector:
     # Operator used to perform the selection.
     operator: 'LabelMatchingOperator'
 
-    def __init__(self, name: str = "", value: str = "", operator: typing.Optional['LabelMatchingOperator'] = None):
+    def __init__(self, name: str = "", value: str = "", operator: typing.Optional['LabelMatchingOperator'] = None) -> None:
         self.name = name
         self.value = value
         self.operator = operator if operator is not None else LabelMatchingOperator.EQUAL
@@ -249,7 +251,7 @@ class BinaryExpr:
     group_modifier: typing.Optional[typing.Literal["left", "right"]]
     group_labels: typing.Optional[list[str]]
 
-    def __init__(self, op: typing.Optional['BinaryOp'] = None, left: typing.Optional['Expr'] = None, right: typing.Optional['Expr'] = None, match_type: typing.Optional[typing.Literal["on", "ignore"]] = None, match_labels: typing.Optional[list[str]] = None, group_modifier: typing.Optional[typing.Literal["left", "right"]] = None, group_labels: typing.Optional[list[str]] = None):
+    def __init__(self, op: typing.Optional['BinaryOp'] = None, left: typing.Optional['Expr'] = None, right: typing.Optional['Expr'] = None, match_type: typing.Optional[typing.Literal["on", "ignore"]] = None, match_labels: typing.Optional[list[str]] = None, group_modifier: typing.Optional[typing.Literal["left", "right"]] = None, group_labels: typing.Optional[list[str]] = None) -> None:
         self.type_val = "binaryExpr"
         self.op = op if op is not None else BinaryOp.ADD
         self.left = left if left is not None else NumberLiteralExpr()
@@ -277,6 +279,8 @@ class BinaryExpr:
     
             if self.group_labels is not None and len(self.group_labels) != 0:
                 buffer += "(" + ", ".join(self.group_labels) + ") "
+            else:
+                buffer += "() "
     
         buffer += "(" + str(self.right) + ")"
     
@@ -315,7 +319,7 @@ class UnaryExpr:
     op: 'UnaryOp'
     expr: 'Expr'
 
-    def __init__(self, op: typing.Optional['UnaryOp'] = None, expr: typing.Optional['Expr'] = None):
+    def __init__(self, op: typing.Optional['UnaryOp'] = None, expr: typing.Optional['Expr'] = None) -> None:
         self.type_val = "unaryExpr"
         self.op = op if op is not None else UnaryOp.PLUS
         self.expr = expr if expr is not None else NumberLiteralExpr()
@@ -345,7 +349,7 @@ class FuncCallExpr:
     # Arguments.
     args: list['Expr']
 
-    def __init__(self, function: str = "", args: typing.Optional[list['Expr']] = None):
+    def __init__(self, function: str = "", args: typing.Optional[list['Expr']] = None) -> None:
         self.type_val = "funcCallExpr"
         self.function = function
         self.args = args if args is not None else []

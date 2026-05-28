@@ -11,14 +11,14 @@ var _ cog.Builder[Expr] = (*NumberLiteralBuilder)(nil)
 // Represents a PromQL expression.
 type NumberLiteralBuilder struct {
 	internal *Expr
-	errors   map[string]cog.BuildErrors
+	errors   cog.BuildErrors
 }
 
 func NewNumberLiteralBuilder() *NumberLiteralBuilder {
 	resource := NewExpr()
 	builder := &NumberLiteralBuilder{
 		internal: resource,
-		errors:   make(map[string]cog.BuildErrors),
+		errors:   make(cog.BuildErrors, 0),
 	}
 	if builder.internal.NumberLiteralExpr == nil {
 		builder.internal.NumberLiteralExpr = NewNumberLiteralExpr()
@@ -31,6 +31,7 @@ func NewNumberLiteralBuilder() *NumberLiteralBuilder {
 // Shortcut to turn a number into a NumberLiteral expression.
 func N(value float64) *NumberLiteralBuilder {
 	builder := NewNumberLiteralBuilder()
+
 	builder.Value(value)
 
 	return builder
@@ -41,7 +42,16 @@ func (builder *NumberLiteralBuilder) Build() (Expr, error) {
 		return Expr{}, err
 	}
 
+	if len(builder.errors) > 0 {
+		return Expr{}, cog.MakeBuildErrors("promql.numberLiteral", builder.errors)
+	}
+
 	return *builder.internal, nil
+}
+
+func (builder *NumberLiteralBuilder) RecordError(path string, err error) *NumberLiteralBuilder {
+	builder.errors = append(builder.errors, cog.MakeBuildErrors(path, err)...)
+	return builder
 }
 
 func (builder NumberLiteralBuilder) String() string {

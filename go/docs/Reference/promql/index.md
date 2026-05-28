@@ -121,6 +121,30 @@ NewNumberLiteralExprOrStringLiteralExprOrSubqueryExprOrAggregationExprOrVectorEx
 func NewNumberLiteralExprOrStringLiteralExprOrSubqueryExprOrAggregationExprOrVectorExprOrBinaryExprOrUnaryExprOrFuncCallExpr() *NumberLiteralExprOrStringLiteralExprOrSubqueryExprOrAggregationExprOrVectorExprOrBinaryExprOrUnaryExprOrFuncCallExpr
 ```
 
+### <span class="badge function"></span> LabelEq
+
+```go
+func LabelEq(name string, value string) *LabelSelectorBuilder
+```
+
+### <span class="badge function"></span> LabelNeq
+
+```go
+func LabelNeq(name string, value string) *LabelSelectorBuilder
+```
+
+### <span class="badge function"></span> LabelMatchRegexp
+
+```go
+func LabelMatchRegexp(name string, value string) *LabelSelectorBuilder
+```
+
+### <span class="badge function"></span> LabelNotMatchRegexp
+
+```go
+func LabelNotMatchRegexp(name string, value string) *LabelSelectorBuilder
+```
+
 ### <span class="badge function"></span> Sum
 
 Calculate sum over dimensions.
@@ -1271,22 +1295,6 @@ See https://prometheus.io/docs/prometheus/latest/querying/functions/#trigonometr
 func Rad(v cog.Builder[Expr]) *FuncCallExprBuilder
 ```
 
-### <span class="badge function"></span> N
-
-Shortcut to turn a number into a NumberLiteral expression.
-
-```go
-func N(value float64) *NumberLiteralBuilder
-```
-
-### <span class="badge function"></span> S
-
-Shortcut to turn a string into a StringLiteral expression.
-
-```go
-func S(value string) *StringLiteralBuilder
-```
-
 ### <span class="badge function"></span> Subquery
 
 Creates a subquery.
@@ -1323,5 +1331,21 @@ See https://prometheus.io/docs/prometheus/latest/querying/functions/#vector
 
 ```go
 func Vector(s string) *VectorExprBuilder
+```
+
+### <span class="badge function"></span> S
+
+Shortcut to turn a string into a StringLiteral expression.
+
+```go
+func S(value string) *StringLiteralBuilder
+```
+
+### <span class="badge function"></span> N
+
+Shortcut to turn a number into a NumberLiteral expression.
+
+```go
+func N(value float64) *NumberLiteralBuilder
 ```
 

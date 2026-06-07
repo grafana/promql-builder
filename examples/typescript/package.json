@@ -14,7 +14,7 @@
     "@grafana/promql-builder": "^0.0.3"
   },
   "devDependencies": {
-    "@types/node": "~20",
+    "@types/node": "~24.13.0",
     "ts-node": "^10.9.2",
     "typescript": "~5.3"
   }

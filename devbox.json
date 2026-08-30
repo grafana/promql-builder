@@ -4,7 +4,7 @@
     "python312@3.12",
     "go@1.26",
     "yarn@1.22",
-    "nodejs-slim_22@latest"
+    "nodejs-slim_22@22.23.2"
   ],
   "shell": {
     "init_hook": [
